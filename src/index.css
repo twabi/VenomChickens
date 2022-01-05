@@ -13,8 +13,8 @@ code {
 }
 
 .ant-menu-item-selected {
-  background-color: #fff !important;
-  color: #091d51 !important;
+  background-color: #f69a00 !important;
+  color: #fff !important;
 }
 
 .ant-menu > .ant-menu-item:hover,

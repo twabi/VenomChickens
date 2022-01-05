@@ -26,8 +26,8 @@ const TabList = (props) => {
     const handleClick = e => {
         if(e.key === '/users'){
             handleRoutes("/users");
-        } else if(e.key === '/adminHome'){
-            handleRoutes("/adminHome");
+        } else if(e.key === '/home'){
+            handleRoutes("/home");
         } else if(e.key === '/projects'){
             handleRoutes("/projects");
         } else if(e.key === '/tasks'){
@@ -41,8 +41,8 @@ const TabList = (props) => {
               defaultSelectedKeys={[location.pathname]}
               onClick={handleClick}>
             <Menu.Item
-                key="/adminHome"
-                id="/adminHome"
+                key="/home"
+                id="/home"
                 className={collapsed ? "text-center h6 pl-2" : "h6 pl-2"}
                 aria-controls={`panel-${"/home"}`}
             >
