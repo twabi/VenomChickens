@@ -2,12 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import "mdbreact/dist/css/mdb.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "antd/dist/antd.css";
+import 'semantic-ui-css/semantic.min.css'
+import "@material-tailwind/react/tailwind.css";
+import {BrowserRouter} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <BrowserRouter>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </BrowserRouter>,
   document.getElementById('root')
 );
 

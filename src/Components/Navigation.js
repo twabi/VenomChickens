@@ -3,8 +3,8 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-import LogIn from "./Auth/LogIn";
 import ForgotPassword from "./Auth/ForgotPassword";
+import Login from "./Auth/Login";
 
 
 const Navigation = () => {
@@ -14,10 +14,10 @@ const Navigation = () => {
             <Switch>
 
                 <Route path="/" render={(props) => (
-                    <LogIn {...props} />)} exact />
+                    <Login {...props} />)} exact />
 
                 <Route path="/login" render={(props) => (
-                    <LogIn {...props} />)} exact />
+                    <Login {...props} />)} exact />
 
                 <Route path="/forgot" render={(props) => (
                     <ForgotPassword {...props} />)} exact />

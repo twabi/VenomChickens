@@ -10,7 +10,8 @@ import {
     MDBRow
 } from "mdbreact";
 import logo from "../../logo.png";
-import {Button, Input} from "antd";
+import {Input} from "antd";
+import Button from "@material-tailwind/react/Button";
 import {useHistory} from 'react-router-dom';
 import Firebase from "../Firebase";
 import {MailOutlined, UserOutlined} from "@ant-design/icons";
@@ -67,7 +68,7 @@ const ForgotPassword = () => {
                             <MDBCardBody>
                                 <MDBRow>
                                     <MDBCol>
-                                        <img src={logo} style={{width:"15rem", height:"10rem"}} className="rounded mx-auto d-block" alt="aligment" />
+                                        <img src={logo} style={{width:"10rem", height:"10rem"}} className="rounded mx-auto d-block" alt="aligment" />
                                     </MDBCol>
                                 </MDBRow>
                                 <form>
@@ -77,7 +78,7 @@ const ForgotPassword = () => {
                                                type="email"
                                                placeholder="Your email address"
                                                className="mt-4 mb-2"
-                                               prefix={<MailOutlined style={{color:"#1890ff"}}/>}
+                                               prefix={<MailOutlined style={{color:"#ffa610"}}/>}
                                                onChange={handleEmail}
                                                value={email}
                                         />
@@ -92,7 +93,7 @@ const ForgotPassword = () => {
                                         : null }
 
                                     <div className="text-center py-4 mt-2">
-                                        <Button onClick={sendEmailAdmin} className="w-100" type="primary" shape="round" size="large">
+                                        <Button onClick={sendEmailAdmin} className="w-100 bg-orange-500" type="primary" shape="round" size="large">
                                             REPORT TO ADMIN {showLoading ? <div className="spinner-border mx-2 text-white spinner-border-sm" role="status">
                                             <span className="sr-only">Loading...</span>
                                         </div> : null}
@@ -102,7 +103,7 @@ const ForgotPassword = () => {
                             </MDBCardBody>
                             <MDBFooter>
                                 <div className="text-center text-black-50 d-flex justify-content-center mt-1">
-                                    <a onClick={handleBack} href className="font-italic text-primary">Back to log in</a>
+                                    <a onClick={handleBack} href className="font-italic orange-text">Back to log in</a>
                                 </div>
                             </MDBFooter>
                         </MDBCard>

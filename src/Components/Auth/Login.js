@@ -4,12 +4,12 @@ import { MDBBtn, MDBCard, MDBCardBody, MDBCol } from 'mdbreact';
 import {MDBInput } from 'mdbreact';
 import logo from "../../logo.png";
 import 'mdbreact/dist/css/mdb.css';
-import { Button } from 'antd';
+import Button from "@material-tailwind/react/Button";
 import { useHistory } from 'react-router-dom';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import Firebase from "../Firebase";
 import { Input } from 'antd';
-import {EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined, UserOutlined} from '@ant-design/icons';
+import {LockOutlined, MailOutlined} from '@ant-design/icons';
 
 const dbRef = Firebase.database().ref("System/Users");
 const Login = () => {
@@ -108,7 +108,7 @@ const Login = () => {
                             <MDBCardBody>
                                 <MDBRow className="mb-4">
                                     <MDBCol>
-                                        <img src={logo} style={{width:"15rem", height:"10rem"}} className="rounded mx-auto d-block" alt="aligment" />
+                                        <img src={logo} style={{width:"10rem", height:"10rem"}} className="rounded mx-auto d-block" alt="aligment" />
                                     </MDBCol>
                                 </MDBRow>
                                 <form className="mt-4">
@@ -118,7 +118,7 @@ const Login = () => {
                                                type="email"
                                                placeholder="Your email address"
                                                className="my-3"
-                                               prefix={<MailOutlined style={{color:"#1890ff"}}/>}
+                                               prefix={<MailOutlined style={{color:"#ffa610"}}/>}
                                                onChange={handleEmail}
                                                value={email}
                                         />
@@ -128,7 +128,7 @@ const Login = () => {
                                             value={password}
                                             className="mt-2 mb-3"
                                             onChange={handlePassword}
-                                            prefix={<LockOutlined style={{color:"#1890ff"}}/>}
+                                            prefix={<LockOutlined style={{color:"#ffa610"}}/>}
                                         />
 
                                     </div>
@@ -143,7 +143,7 @@ const Login = () => {
 
 
                                     <div className="text-center py-4 mt-3">
-                                        <Button className="w-100"  onClick={handleLogin} type="primary" shape="round" size="large">
+                                        <Button className="w-100 bg-orange-500"  onClick={handleLogin} type="primary" shape="round" size="large">
                                             LOGIN {showLoading ? <div className="spinner-border mx-2 text-white spinner-border-sm" role="status">
                                             <span className="sr-only">Loading...</span>
                                         </div> : null}
@@ -153,7 +153,7 @@ const Login = () => {
                             </MDBCardBody>
                             <MDBFooter>
                                 <div className="text-center text-black-50 d-flex justify-content-center mb-3">
-                                    forgot your password? <a onClick={handleForgot} href className="font-italic text-primary"> click here</a>
+                                    forgot your password? <a onClick={handleForgot} href className="font-italic orange-text"> click here</a>
                                 </div>
                             </MDBFooter>
                         </MDBCard>
