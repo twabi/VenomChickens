@@ -70,18 +70,18 @@ const NavBar = (props) => {
             </Dialog>
 
             <MDBNavbarNav left>
-                <Switch checked={checked} style={{background: "#f06000"}} onChange={onChange} />
+                <Switch checked={checked} style={{background: "#ffa610"}} onChange={onChange} />
             </MDBNavbarNav>
             <MDBNavbarNav right className="">
                 <MDBNavItem className="d-flex justify-content-center align-items-center">
                     <Avatar className="rounded float-left d-inline"
-                            style={{ backgroundColor: "#f06000", verticalAlign: 'middle' }} size="small" gap={1}>
+                            style={{ backgroundColor: "#ffa610", verticalAlign: 'middle' }} size="small" gap={1}>
                         {userName&&userName.charAt(0)}
                     </Avatar>
-                    <MDBDropdown className="mr-4">
+                    <MDBDropdown className="mr-5">
                         <MDBDropdownToggle nav caret>
                             <div  className="d-inline" >
-                                <p className="d-inline mx-1 font-weight-bold">{userName}</p>
+                                <p className="d-inline mx-1 font-weight-bold">{"userName"}</p>
                             </div>
                         </MDBDropdownToggle>
                         <MDBDropdownMenu className="dropdown-default">

@@ -53,14 +53,14 @@ const SiderNormal = (props) => {
         <Sider
             collapsible
             collapsedWidth={isSmall ? "55" : "90"}
-            width={isSmall ? "150" : "250"}
+            width={isSmall ? "150" : "200"}
             id="sider"
             collapsed={collapsed}
             onCollapse={() => setCollapsed(!collapsed)}
             className="sidebar"
             trigger={null}
             style={{
-                background: "#ffffff",
+                background: "#fff",
                 overflow: "auto",
                 height: "100vh",
                 position: "sticky",
@@ -71,14 +71,14 @@ const SiderNormal = (props) => {
             <div>
                 <SidebarHeader>
                     <div className="d-flex justify-content-center p-2">
-                        <div className="logo border-bottom border-light">
+                        <div className="logo border-bottom border-light bg-white rounded-circle">
                             {collapsed ?
                                 <>
-                                    <img  src={logo} width={80} className="rounded" alt="aligment" />
+                                    <img  src={logo} width={80} className="" alt="aligment" />
                                 </>
                                 :
                                 <>
-                                    <img  src={logo} style={{height:"8rem"}} className="rounded w-100" alt="aligment" />
+                                    <img  src={logo} style={{height:"8rem"}} className="float-left" alt="aligment" />
                                 </>
 
                             }
@@ -86,6 +86,7 @@ const SiderNormal = (props) => {
                         </div>
                     </div>
                 </SidebarHeader>
+                <hr className="bg-white mx-3"/>
                 <SidebarContent className="pb-4">
                    <TabList collapsed={collapsed}/>
                 </SidebarContent>

@@ -143,7 +143,7 @@ const Login = () => {
 
 
                                     <div className="text-center py-4 mt-3">
-                                        <Button className="w-100 bg-orange-500"  onClick={handleLogin} type="primary" shape="round" size="large">
+                                        <Button className="w-100 bg-orange-500"  onClick={gotoHome} type="primary" shape="round" size="large">
                                             LOGIN {showLoading ? <div className="spinner-border mx-2 text-white spinner-border-sm" role="status">
                                             <span className="sr-only">Loading...</span>
                                         </div> : null}

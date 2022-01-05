@@ -15,6 +15,7 @@ const TabList = (props) => {
 
     useEffect(() => {
         setCollapsed(props.collapsed);
+        console.log(props.collapsed);
     }, [props]);
 
     const handleRoutes = (route) => {
@@ -25,8 +26,8 @@ const TabList = (props) => {
     const handleClick = e => {
         if(e.key === '/users'){
             handleRoutes("/users");
-        } else if(e.key === '/home'){
-            handleRoutes("/home");
+        } else if(e.key === '/adminHome'){
+            handleRoutes("/adminHome");
         } else if(e.key === '/projects'){
             handleRoutes("/projects");
         } else if(e.key === '/tasks'){
@@ -35,18 +36,18 @@ const TabList = (props) => {
     };
 
     return (
-        <Menu className="mt-2 mx-1" onClick={handleClick}>
+        <Menu className="mt-4 mx-1 px-2"
+              style={{background: "#fff"}}
+              defaultSelectedKeys={[location.pathname]}
+              onClick={handleClick}>
             <Menu.Item
-                key="/home"
-                id="/home"
+                key="/adminHome"
+                id="/adminHome"
                 className={collapsed ? "text-center h6 pl-2" : "h6 pl-2"}
-                onSelect={() => handleRoutes("/home")}
-                style={"/home" === location.pathname ? {background: "#f06000", color: "#fff"} : null}
-                isSelected={"/home" === location.pathname}
                 aria-controls={`panel-${"/home"}`}
             >
                 <MDBIcon icon="home" size="lg" className="mr-3 d-inline"/>
-                {collapsed? null :<Heading className="d-inline" size={500}><Text className={"/home" === location.pathname ? "d-inline text-white" : "d-inline"} family='Nunito'>Home</Text></Heading>}
+                {collapsed? null : <b>Home</b>}
             </Menu.Item>
 
             <Menu.Item
@@ -54,12 +55,11 @@ const TabList = (props) => {
                 id="/users"
                 className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
                 onSelect={() => handleRoutes("/users")}
-                style={"/users" === location.pathname ? {background: "#f06000", color: "#fff"} : null}
                 isSelected={"/users" === location.pathname}
                 aria-controls={`panel-${"/users"}`}
             >
                 <MDBIcon icon="users" size="lg" className="mr-3"/>
-                {collapsed? null : <Heading className="d-inline" size={500}><Text className={"/users" === location.pathname ? "d-inline text-white" : "d-inline"} family='Nunito'>Members</Text></Heading>}
+                {collapsed? null : <b>Books</b>}
             </Menu.Item>
 
             <Menu.Item
@@ -67,12 +67,11 @@ const TabList = (props) => {
                 id="/projects"
                 className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
                 onSelect={() => handleRoutes("/projects")}
-                style={String(location.pathname).includes("/projects") ? {background: "#f06000", color: "#fff"} : null}
                 isSelected={"/projects" === location.pathname || "/projects/:id" === location.pathname}
                 aria-controls={`panel-${"/projects"}`}
             >
                 <MDBIcon icon="project-diagram" size="lg" className="mr-3"/>
-                {collapsed? null : <Heading className="d-inline" size={500}><Text className={String(location.pathname).includes("/projects") ? "d-inline text-white" : "d-inline"} family='Nunito'>Projects</Text></Heading>}
+                {collapsed? null : <b>Authors</b>}
             </Menu.Item>
 
             <Menu.Item
@@ -80,12 +79,11 @@ const TabList = (props) => {
                 id="/tasks"
                 className={collapsed ? "h6 text-center pl-3" : "h6 pl-3"}
                 onSelect={() => handleRoutes("/tasks")}
-                style={"/tasks" === location.pathname ? {background: "#f06000", color: "#fff"} : null}
                 isSelected={"/tasks" === location.pathname}
                 aria-controls={`panel-${"/tasks"}`}
             >
                 <MDBIcon icon="clipboard-list" size="lg" className="mr-3"/>
-                {collapsed? null : <Heading className="d-inline" size={500}><Text className={"/tasks" === location.pathname ? "d-inline text-white" : "d-inline"} family='Nunito'>Tasks</Text></Heading>}
+                {collapsed? null : <b>Tasks</b>}
             </Menu.Item>
 
 
