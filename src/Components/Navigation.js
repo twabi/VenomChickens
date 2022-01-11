@@ -9,6 +9,9 @@ import Home from "./Pages/Home";
 import Employees from "./Pages/Employees";
 import Dealers from "./Pages/Dealers/Dealers";
 import DealerDetails from "./Pages/Dealers/DealerDetails";
+import Products from "./Pages/Products";
+import Branches from "./Pages/Branches";
+import Sales from "./Pages/Sales";
 
 
 const Navigation = () => {
@@ -37,6 +40,21 @@ const Navigation = () => {
 
                 <Route path="/dealers/:id" render={(props) => (
                     <DealerDetails {...props} />)} exact />
+
+                <Route path="/products" render={(props) => (
+                    <Products {...props} />)} exact />
+
+                <Route path="/products/:id" render={(props) => (
+                    <DealerDetails {...props} />)} exact />
+
+                <Route path="/branches" render={(props) => (
+                    <Branches {...props} />)} exact />
+
+                <Route path="/branches/:id" render={(props) => (
+                    <DealerDetails {...props} />)} exact />
+
+                <Route path="/sales" render={(props) => (
+                    <Sales {...props} />)} exact />
             </Switch>
         </Fragment>
     );

@@ -163,7 +163,7 @@ const Employees = () => {
                                             </div>
 
                                             <MDBRow className="ml-1">
-                                                <SearchInput height={40} placeholder="Search members" className="w-100"   onChange={e => handleSearch(e.target.value)} />
+                                                <SearchInput height={40} placeholder="Search Employees" className="w-100"   onChange={e => handleSearch(e.target.value)} />
                                                 <Button size="large" type="primary" style={{background: "#f69a00", borderColor: "#f69a06"}} className="mx-2" onClick={() => {setShowModal(true)}}>
                                                     New Employee
                                                 </Button>

@@ -139,7 +139,7 @@ const Sales = () => {
                                             </div>
 
                                             <MDBRow className="ml-1">
-                                                <SearchInput height={40} placeholder="Search members" className="w-100"   onChange={e => handleSearch(e.target.value)} />
+                                                <SearchInput height={40} placeholder="Search sales" className="w-100"   onChange={e => handleSearch(e.target.value)} />
                                             </MDBRow>
                                         </MDBCol>
 
