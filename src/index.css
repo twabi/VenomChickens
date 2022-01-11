@@ -22,3 +22,8 @@ code {
   color: #ffa610 !important;
   border-bottom: 2px solid #ffa610 !important;
 }
+
+.scroll {
+  height: 350px;
+  overflow-y: auto;
+}

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import SideBar from "../Navbars/SideBar";
-import NavBar from "../Navbars/NavBar";
+import SideBar from "../../Navbars/SideBar";
+import NavBar from "../../Navbars/NavBar";
 import Button from "@material-tailwind/react/Button";
 import {Card, Layout, Table, Tooltip} from "antd";
 import {
@@ -14,7 +14,7 @@ import {
 } from "mdbreact";
 import {Text} from "react-font";
 import {useListVals} from "react-firebase-hooks/database";
-import Firebase from "../Firebase";
+import Firebase from "../../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
 
@@ -74,12 +74,12 @@ const Dealers = () => {
 
         setDataArray([{
             key:1, name: "Jack Bauer", email: "jack@hotmail.com", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
+            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("dealerID1234")}} size="2x" />
         }]);
     }, []);
 
     const handleProceed = (id) => {
-        history.push(generatePath("/authors/:id", { id }));
+        history.push(generatePath("/dealers/:id", { id }));
     };
 
     const handleSearch = searchText => {

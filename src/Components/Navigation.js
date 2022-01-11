@@ -7,6 +7,8 @@ import ForgotPassword from "./Auth/ForgotPassword";
 import Login from "./Auth/Login";
 import Home from "./Pages/Home";
 import Employees from "./Pages/Employees";
+import Dealers from "./Pages/Dealers/Dealers";
+import DealerDetails from "./Pages/Dealers/DealerDetails";
 
 
 const Navigation = () => {
@@ -29,6 +31,12 @@ const Navigation = () => {
 
                 <Route path="/employees" render={(props) => (
                     <Employees {...props} />)} exact />
+
+                <Route path="/dealers" render={(props) => (
+                    <Dealers {...props} />)} exact />
+
+                <Route path="/dealers/:id" render={(props) => (
+                    <DealerDetails {...props} />)} exact />
             </Switch>
         </Fragment>
     );
