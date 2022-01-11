@@ -24,15 +24,7 @@ const TabList = (props) => {
     }
 
     const handleClick = e => {
-        if(e.key === '/users'){
-            handleRoutes("/users");
-        } else if(e.key === '/home'){
-            handleRoutes("/home");
-        } else if(e.key === '/projects'){
-            handleRoutes("/projects");
-        } else if(e.key === '/tasks'){
-            handleRoutes("/tasks");
-        }
+        handleRoutes(e.key);
     };
 
     return (
@@ -44,46 +36,48 @@ const TabList = (props) => {
                 key="/home"
                 id="/home"
                 className={collapsed ? "text-center h6 pl-2" : "h6 pl-2"}
-                aria-controls={`panel-${"/home"}`}
-            >
-                <MDBIcon icon="home" size="lg" className="mr-3 d-inline"/>
+            ><MDBIcon icon="home" size="lg" className="mr-3 d-inline"/>
                 {collapsed? null : <b>Home</b>}
             </Menu.Item>
 
             <Menu.Item
-                key="/users"
-                id="/users"
+                key="/employees"
+                id="/employees"
                 className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
-                onSelect={() => handleRoutes("/users")}
-                isSelected={"/users" === location.pathname}
-                aria-controls={`panel-${"/users"}`}
-            >
-                <MDBIcon icon="users" size="lg" className="mr-3"/>
-                {collapsed? null : <b>Books</b>}
+            ><MDBIcon icon="users" size="lg" className="mr-3"/>
+                {collapsed? null : <b>Employees</b>}
             </Menu.Item>
 
             <Menu.Item
-                key="/projects"
-                id="/projects"
+                key="/dealers"
+                id="/dealers"
                 className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
-                onSelect={() => handleRoutes("/projects")}
-                isSelected={"/projects" === location.pathname || "/projects/:id" === location.pathname}
-                aria-controls={`panel-${"/projects"}`}
-            >
-                <MDBIcon icon="project-diagram" size="lg" className="mr-3"/>
-                {collapsed? null : <b>Authors</b>}
+            ><MDBIcon icon="user-tie" size="lg" className="mr-3"/>
+                {collapsed? null : <b className="ml-2">Dealers</b>}
             </Menu.Item>
 
             <Menu.Item
-                key="/tasks"
-                id="/tasks"
-                className={collapsed ? "h6 text-center pl-3" : "h6 pl-3"}
-                onSelect={() => handleRoutes("/tasks")}
-                isSelected={"/tasks" === location.pathname}
-                aria-controls={`panel-${"/tasks"}`}
-            >
-                <MDBIcon icon="clipboard-list" size="lg" className="mr-3"/>
-                {collapsed? null : <b>Tasks</b>}
+                key="/products"
+                id="/products"
+                className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
+            ><MDBIcon icon="shopping-cart" size="lg" className="mr-3"/>
+                {collapsed? null : <b className="ml-1">Products</b>}
+            </Menu.Item>
+
+            <Menu.Item
+                key="/branches"
+                id="/branches"
+                className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
+            ><MDBIcon icon="project-diagram" size="lg" className="mr-3"/>
+                {collapsed? null : <b>Branches</b>}
+            </Menu.Item>
+
+            <Menu.Item
+                key="/sales"
+                id="/sales"
+                className={collapsed ? "h6 text-center pl-2" : "h6 pl-2"}
+            ><MDBIcon icon="money-bill-alt" size="lg" className="mr-3"/>
+                {collapsed? null : <b>Sales</b>}
             </Menu.Item>
 
 

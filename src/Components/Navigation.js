@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import ForgotPassword from "./Auth/ForgotPassword";
 import Login from "./Auth/Login";
-import Home from "./Home";
+import Home from "./Pages/Home";
 
 
 const Navigation = () => {

@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Card, Layout} from 'antd';
-import NavBar from "./Navbars/NavBar";
-import SideBar from "./Navbars/SideBar";
-import Firebase from "./Firebase";
+import NavBar from "../Navbars/NavBar";
+import SideBar from "../Navbars/SideBar";
+import Firebase from "../Firebase";
 
 
 const { Content } = Layout;
