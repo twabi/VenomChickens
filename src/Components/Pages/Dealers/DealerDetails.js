@@ -111,7 +111,7 @@ const DealerDetails = () => {
                                             <div className="d-block ml-1">
                                                 <h3 className="font-weight-bold">
                                                     <Text family='Nunito'>
-                                                        Shelves
+                                                        Transactions
                                                     </Text>
                                                 </h3>
                                             </div>
@@ -163,15 +163,10 @@ const DealerDetails = () => {
                                             <div className="d-block ml-1">
                                                 <h3 className="font-weight-bold">
                                                     <Text family='Nunito'>
-                                                        Book Metrics
+                                                        Dealer Metrics
                                                     </Text>
                                                 </h3>
                                             </div>
-                                        </MDBCol>
-                                        <MDBCol>
-                                            <Button type="primary" className="mx-1" onClick={() => {}}>
-                                                <AddIcon color="info"/>
-                                            </Button>
                                         </MDBCol>
 
                                     </MDBRow>

@@ -27,10 +27,29 @@ const TabList = (props) => {
         handleRoutes(e.key);
     };
 
+    const getKey = (path) => {
+        var exactPath = "/"
+        if(path.includes("employees")){
+            exactPath = "/employees"
+        } else if(path.includes("dealers")){
+            exactPath = "/dealers"
+        } else if(path.includes("home")){
+            exactPath = "/home"
+        }else if(path.includes("sales")){
+            exactPath = "/sales"
+        }else if(path.includes("products")){
+            exactPath = "/products"
+        }else if(path.includes("branches")){
+            exactPath = "/branches"
+        }
+
+        return exactPath;
+    }
+
     return (
         <Menu className="mt-4 mx-1 px-2"
               style={{background: "#fff"}}
-              defaultSelectedKeys={[location.pathname]}
+              defaultSelectedKeys={[getKey(location.pathname)]}
               onClick={handleClick}>
             <Menu.Item
                 key="/home"
