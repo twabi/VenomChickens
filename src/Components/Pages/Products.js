@@ -17,23 +17,22 @@ import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
+import CreateProductModal from "../Modals/Product/CreateProductModal";
 
 
-const dbRef = Firebase.database().ref('System/Branches');
+const dbRef = Firebase.database().ref('System/Products');
 const { Content } = Layout;
 const { Meta } = Card;
 const Products = () => {
 
     const history = useHistory();
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-    const [employees, loading, error] = useListVals(dbRef);
+    const [products, loading, error] = useListVals(dbRef);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
-    const [userArray, setUserArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
-    const [editUser, setEditUser] = useState(null);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
@@ -43,18 +42,17 @@ const Products = () => {
 
     useEffect(() => {
 
-        setDataArray([{
-            key:1, name: "Zomba Branch", email: "jack@hotmail.com", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
-        }]);
-    }, []);
+        if(products){
+            
+        }
+    }, [products]);
 
     const handleProceed = (id) => {
-        history.push(generatePath("/authors/:id", { id }));
+        history.push(generatePath("/products/:id", { id }));
     };
 
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
+        const filteredEvents = [].filter(({ name, email, dpt, userRole }) => {
             name = name.toLowerCase();
             email = email.toLowerCase();
             dpt = dpt.toLowerCase();
@@ -86,6 +84,7 @@ const Products = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                        <CreateProductModal modal={setShowModal}/>
                                     </MDBCol>
 
                                 </Dialog>
@@ -175,6 +174,7 @@ const Products = () => {
                                                                         style={{background: "#f69a00", borderColor: "#f69a06"}}>
                                                                     <EyeOpenIcon color="white" onClick={() => {}}/></Button>,
                                                             ]}>
+                                                            <img className="w-100 mb-2" style={{ height:"12rem"}} src={"https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"}/>
                                                             <Meta
                                                                 title={<b>{item.name}</b>}
                                                                 description={"Product"}

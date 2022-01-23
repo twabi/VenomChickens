@@ -6,7 +6,7 @@ import {MDBAlert} from "mdbreact";
 import Firebase from "../../Firebase";
 
 
-var storageRef = Firebase.storage().ref("System/Products");
+var storageRef = Firebase.storage().ref("/");
 const moment = require("moment");
 const CreateProductModal = (props) => {
 
@@ -21,59 +21,47 @@ const CreateProductModal = (props) => {
     }
 
 
-    const addProduct = () => {
+    const addProduct = (values) => {
         setShowLoading(true);
 
         var timeStamp = moment().format("YYYY-MM-DDTh:mm:ss");
-        var name = document.getElementById("name").value;
-        var price = document.getElementById("price").value;
-        var stockCount = document.getElementById("count").value;
-        var productType = document.getElementById("type").value;
-        var description =  document.getElementById("desc").value;
-
         var productID =  Array(20).fill("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789")
             .map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
-        if(name.includes("/")){
-            alert("The name cannot include a slash, use a dash or another symbol instead")
-        } else {
-            var object = {
-                "name" : name,
-                "price" : price,
-                "stockCount" : stockCount,
-                "productType" : productType,
-                "productID" : productID,
-                "dateCreated" : timeStamp,
-                "description" : description
-            };
+        var object = {
+            "name" : values.name,
+            "price" : values.price,
+            "productType" : values.type,
+            "productID" : productID,
+            "dateCreated" : timeStamp,
+            "description" : values.description
+        };
 
 
-            const output = FireFetch.SaveTODB("Products", productID, object);
-            output.then((result) => {
-                console.log(result);
-                if(result === "success"){
-                    setMessage("Product added successfully");
-                    setColor("success");
-                    setShowAlert(true);
-                    setShowLoading(false);
-                    setTimeout(() => {
-                        setShowAlert(false);
-                        props.modal(false);
-                    }, 2000);
-
-
-                    storageRef.child(productID).child("image").put(file).then(function(snapshot) {
-                        console.log('Uploaded a blob or file!');
-                    });
-                }
-            }).catch((error) => {
-                setMessage("Unable to add product, an error occurred :: " + error);
-                setColor("danger");
+        const output = FireFetch.SaveTODB("Products", productID, object);
+        output.then((result) => {
+            console.log(result);
+            if(result === "success"){
+                setMessage("Product added successfully");
+                setColor("success");
                 setShowAlert(true);
                 setShowLoading(false);
-            })
+                setTimeout(() => {
+                    setShowAlert(false);
+                    props.modal(false);
+                }, 2000);
 
-        }
+
+                storageRef.child("products").child(productID).put(file).then(function(snapshot) {
+                    console.log('Uploaded a blob or file!');
+                });
+            }
+        }).catch((error) => {
+            setMessage("Unable to add product, an error occurred :: " + error);
+            setColor("danger");
+            setShowAlert(true);
+            setShowLoading(false);
+        })
     }
 
 
@@ -98,11 +86,11 @@ const CreateProductModal = (props) => {
                 </Form.Item>
 
                 <Form.Item label="Product name"
-                           name="Product name"
+                           name="name"
                            rules={[{ required: true, message: 'Please input product name!' }]}>
                     <Input placeholder="enter product name" id="name"/>
                 </Form.Item>
-                <Form.Item label="Product Type">
+                <Form.Item label="Product Type" name="type">
                     <Input placeholder="enter product type" id="type"/>
                 </Form.Item>
                 <Form.Item label="Product Unit Price (MWK)"
@@ -110,11 +98,7 @@ const CreateProductModal = (props) => {
                            rules={[{ required: true, message: 'Please input product price!' }]}>
                     <Input type="number" placeholder="enter user phone number" id="price"/>
                 </Form.Item>
-                <Form.Item label="Stock Count" name="count"
-                           rules={[{ required: true, message: 'Please input stock count!' }]}>
-                    <Input type="number" placeholder="enter stock count" id="count"/>
-                </Form.Item>
-                <Form.Item label="Product Description">
+                <Form.Item label="Product Description" name="description">
                     <Input placeholder="enter product description (any)" id="desc"/>
                 </Form.Item>
 

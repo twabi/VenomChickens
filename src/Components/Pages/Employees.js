@@ -120,6 +120,7 @@ const Employees = () => {
         }
 
         setDataArray([...tempArray]);
+        setUserArray([...tempArray])
     }, [employees]);
 
     const handleSearch = searchText => {
