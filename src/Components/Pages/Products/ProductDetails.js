@@ -7,7 +7,7 @@ import {MDBCol, MDBRow} from "mdbreact";
 import {Text} from "react-font";
 import {AddIcon, Button, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
 import Firebase from "../../Firebase";
-import {useListVals} from "react-firebase-hooks/database";
+import {useListVals, useObject} from "react-firebase-hooks/database";
 import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
 
@@ -16,7 +16,8 @@ const { Meta } = Card;
 const dbRef = Firebase.database().ref('System/Products');
 const ProductDetails = (props) => {
     const { id } = useParams();
-    const [product, loading, error] = useListVals(dbRef);
+    const [snapshot, loading, error] = useObject(dbRef.child(id));
+    const [product, setProduct] = useState(null);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
         setCheckedData(data);
@@ -24,7 +25,12 @@ const ProductDetails = (props) => {
     
     useEffect(() => {
         const url = props.history.location.state?.url
-    }, [props.history.location.state?.url])
+        if(snapshot){
+            var object = snapshot.val();
+            object.url = url;
+            setProduct(object);
+        }
+    }, [props.history.location.state?.url, snapshot])
 
 
     return (
@@ -46,7 +52,7 @@ const ProductDetails = (props) => {
                                             <div className="d-block ml-1">
                                                 <h3 className="font-weight-bold">
                                                     <Text family='Nunito'>
-                                                        Dealer Details
+                                                        Product Details
                                                     </Text>
                                                 </h3>
                                             </div>
@@ -76,25 +82,25 @@ const ProductDetails = (props) => {
 
                                     </MDBRow>
                                     <hr/>
-                                    <MDBRow left style={{height:"350px"}}>
+                                    <MDBRow left style={{height:"300px"}}>
                                         <MDBCol>
                                             <Card bordered={false} className="">
-                                                <img className="w-100" style={{ height:"20rem"}} src={"https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"}/>
+                                                <img className="w-100" style={{ height:"17rem"}} src={product&&product.url}/>
                                             </Card>
                                         </MDBCol>
                                         <MDBCol md={7}>
                                             <Card bordered={false} className="w-100 bg-white">
                                                 <div>
-                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>The Erring Gor</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>{product&&product.name}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Author: &nbsp;&nbsp;<b>John Smith</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Type: &nbsp;&nbsp;<b>{product&&product.productType}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Price: &nbsp;&nbsp;<b>K40</b></>}
+                                                    <Alert message={<>Price: &nbsp;&nbsp;<b>{product&&product.price}</b></>}
                                                            className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Reads: &nbsp;&nbsp;<b>33</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Stock: &nbsp;&nbsp;<b>33</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>created: &nbsp;&nbsp;<b>today</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Description: &nbsp;&nbsp;<b>{product&&product.description}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
 
                                                 </div>
@@ -115,7 +121,7 @@ const ProductDetails = (props) => {
                                             <div className="d-block ml-1">
                                                 <h3 className="font-weight-bold">
                                                     <Text family='Nunito'>
-                                                        Transactions
+                                                        Updates
                                                     </Text>
                                                 </h3>
                                             </div>
@@ -167,7 +173,7 @@ const ProductDetails = (props) => {
                                             <div className="d-block ml-1">
                                                 <h3 className="font-weight-bold">
                                                     <Text family='Nunito'>
-                                                        Dealer Metrics
+                                                        Product Metrics
                                                     </Text>
                                                 </h3>
                                             </div>

@@ -12,6 +12,7 @@ import DealerDetails from "./Pages/Dealers/DealerDetails";
 import Products from "./Pages/Products/Products";
 import Branches from "./Pages/Branches";
 import Sales from "./Pages/Sales";
+import ProductDetails from "./Pages/Products/ProductDetails";
 
 
 const Navigation = () => {
@@ -45,7 +46,7 @@ const Navigation = () => {
                     <Products {...props} />)} exact />
 
                 <Route path="/products/:id" render={(props) => (
-                    <DealerDetails {...props} />)} exact />
+                    <ProductDetails {...props} />)} exact />
 
                 <Route path="/branches" render={(props) => (
                     <Branches {...props} />)} exact />
