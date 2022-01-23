@@ -20,6 +20,7 @@ import {generatePath} from "react-router";
 import CreateUserModal from "../Modals/User/CreateUserModal";
 import EditUserModal from "../Modals/User/EditUserModal";
 import ViewUserModal from "../Modals/User/ViewUserModal";
+import FireFetch from "../FireFetch";
 
 
 const dbRef = Firebase.database().ref('System/Users');
@@ -108,7 +109,7 @@ const Employees = () => {
                                 size="sm" onClick={() => {
                             // eslint-disable-next-line no-restricted-globals
                             if (confirm("Are you sure you want to delete Task?")) {
-                                //deleteTask(task.taskID);
+                                deleteUser(employee.userID);
                             }
                         }}>
                             <TrashIcon color="danger"/>
@@ -133,6 +134,49 @@ const Employees = () => {
         setDataArray(filteredEvents);
     };
 
+    const deleteUser = (objectID) => {
+
+        var payload = {
+            "uid": objectID
+        }
+
+        console.log(objectID);
+        const output = FireFetch.DeleteFromDB("Users", objectID);
+        output.then((result) => {
+            console.log(result);
+            if(result === "success"){
+                setMessage("User deleted successfully");
+                setColor("success");
+                setShowDeleteAlert(true);
+                setTimeout(() => {
+                    setShowDeleteAlert(false);
+                }, 3000);
+
+                //delete from firebase auth using the cloud function deployed url
+                fetch("https://us-central1-art-of-selling.cloudfunctions.net/deleteUser",
+                    {
+                        method : 'POST',
+                        body : JSON.stringify(payload),
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    })
+                    .then(response => response.text())
+                    .then((result) => {
+                        console.log(result)
+                    })
+                    .catch((error) => {
+                        console.log('error', error)
+                    });
+
+            } else {
+                setMessage("Unable to add user and error occurred :: " + result);
+                setColor("danger");
+                setShowDeleteAlert(true);
+            }
+        });
+
+    }
     return (
         <>
             <Layout style={{width: "100vw"}}>
