@@ -17,9 +17,10 @@ import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
+import CreateUserModal from "../Modals/User/CreateUserModal";
 
 
-const dbRef = Firebase.database().ref('System/Employees');
+const dbRef = Firebase.database().ref('System/Users');
 const { Content } = Layout;
 const Employees = () => {
 
@@ -39,9 +40,13 @@ const Employees = () => {
             dataIndex: 'email',
             key: 'email',
         },{
-            title: 'Books',
-            dataIndex: 'books',
-            key: 'books',
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone',
+        },{
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
         },{
             title: 'Created',
             dataIndex: 'created',
@@ -71,16 +76,46 @@ const Employees = () => {
 
 
     useEffect(() => {
+        var tempArray = [];
+        if(employees){
+            employees.map((employee) =>{
+                tempArray.push({
+                    key: 1,
+                    name: "Jack Bauer",
+                    email: "jack@hotmail.com",
+                    books: 7,
+                    created: new Date(2021, 11, 12),
+                    action: <div>
+                        <Button intent="primary" onClick={() => {
+                            //setSelectedTask(task);
+                            setViewModal(true);
+                        }}>
+                            <EyeOpenIcon color="blue700"/>
+                        </Button>
+                        <Button intent="danger" onClick={() => {
+                            // eslint-disable-next-line no-restricted-globals
+                            if (confirm("Are you sure you want to delete Task?")) {
+                                //deleteTask(task.taskID);
+                            }
+                        }}>
+                            <TrashIcon color="danger"/>
+                        </Button>
+                        <Button intent="edit" onClick={() => {
+                            //setSelectedTask(task);
+                            //setEditModal(true);
+                        }}>
+                            <EditIcon color="primary"/>
+                        </Button></div>
+                })
+            })
+        }
 
-        setDataArray([{
-            key:1, name: "Jack Bauer", email: "jack@hotmail.com", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
-        }]);
-    }, []);
+        setDataArray([...tempArray]);
+    }, [employees]);
 
-    const handleProceed = (id) => {
-        history.push(generatePath("/authors/:id", { id }));
-    };
+    //const handleProceed = (id) => {
+        //history.push(generatePath("/authors/:id", { id }));
+    //};
 
     const handleSearch = searchText => {
         const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
@@ -115,6 +150,7 @@ const Employees = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                        <CreateUserModal modal={setShowModal}/>
                                     </MDBCol>
 
                                 </Dialog>
