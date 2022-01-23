@@ -6,7 +6,7 @@ import {MDBAlert} from "mdbreact";
 import Firebase from "../../Firebase";
 
 
-var storageRef = Firebase.storage().ref("System/Products");
+var storageRef = Firebase.storage().ref("/");
 const moment = require("moment");
 const EditProductModal = (props) => {
 
@@ -33,14 +33,14 @@ const EditProductModal = (props) => {
     }, [props, selectedProduct])
 
 
-    const editProduct = () => {
+    const editProduct = (values) => {
         setShowLoading(true);
 
         var object = {
-            "name" : name,
-            "price" : price,
-            "stockCount" : count,
-            "productType" : type,
+            "name" : values.name,
+            "price" : values.price,
+            "description" : values.description,
+            "productType" : values.type,
         };
 
         const output = FireFetch.updateInDB("Products", selectedProduct.productID, object);
@@ -53,11 +53,10 @@ const EditProductModal = (props) => {
                 setShowLoading(false);
                 setTimeout(() => {
                     setShowAlert(false);
-                    // window.location.href = "/outletProducts";
                     props.modal(false);
                 }, 2000);
 
-                storageRef.child(selectedProduct.productID).child("image").put(file).then(function(snapshot) {
+                storageRef.child("products").child(selectedProduct.productID).put(file).then(function(snapshot) {
                     console.log('Uploaded a blob or file!');
                 });
 
@@ -69,10 +68,7 @@ const EditProductModal = (props) => {
             setShowAlert(true);
             setShowLoading(false);
         })
-
-
     }
-
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -83,21 +79,12 @@ const EditProductModal = (props) => {
                 layout="vertical"
                 onFinish={editProduct}
                 onFinishFailed={onFinishFailed}
-                fields={[
-                    {
-                        name: ["productName"],
-                        value: name,
-                    },{
-                        name: ["price"],
-                        value: price,
-                    },{
-                        name: ["type"],
-                        value: type,
-                    },{
-                        name: ["count"],
-                        value: count,
-                    },
-                ]}
+                initialValues={{
+                    name: selectedProduct.name,
+                    price: selectedProduct.price,
+                    type: selectedProduct.productType,
+                    description: selectedProduct.description,
+                }}
             >
                 <Form.Item label="Upload Product Image">
                     <Input type="file"
@@ -107,7 +94,7 @@ const EditProductModal = (props) => {
                            placeholder="product image" id="prodImage"/>
                 </Form.Item>
 
-                <Form.Item label="Product name" name={"productName"}>
+                <Form.Item label="Product name" name={"name"}>
                     <Input placeholder="enter product name" id="name" onChange={e => setName(e.target.value)}/>
                 </Form.Item>
                 <Form.Item label="Product Type" name={"type"}>
@@ -116,8 +103,8 @@ const EditProductModal = (props) => {
                 <Form.Item label="Product Unit Price (MWK)" name={"price"}>
                     <Input type="number" placeholder="enter user phone number" id="price" onChange={e => setPrice(e.target.value)}/>
                 </Form.Item>
-                <Form.Item label="Stock Count" name={"count"}>
-                    <Input type="number" placeholder="enter stock count" id="count" onChange={e => setCount(e.target.value)}/>
+                <Form.Item label="Description" name={"description"}>
+                    <Input placeholder="enter product description" id="description" />
                 </Form.Item>
 
                 {showAlert?
@@ -128,9 +115,11 @@ const EditProductModal = (props) => {
                     </>
                     : null }
 
-                <Button appearance="primary" htmlType="submit" isLoading={showLoading}>
-                    Edit
-                </Button>
+                <Form.Item>
+                    <Button appearance="primary" htmlType="submit" isLoading={showLoading}>
+                        Edit
+                    </Button>
+                </Form.Item>
 
             </Form>
 

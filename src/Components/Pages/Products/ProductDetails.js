@@ -5,11 +5,12 @@ import NavBar from "../../Navbars/NavBar";
 import {useParams} from "react-router";
 import {MDBCol, MDBRow} from "mdbreact";
 import {Text} from "react-font";
-import {AddIcon, Button, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
+import {AddIcon, Button, Dialog, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
 import Firebase from "../../Firebase";
 import {useListVals, useObject} from "react-firebase-hooks/database";
 import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
+import EditProductModal from "../../Modals/Product/EditProductModal";
 
 const {Content} = Layout;
 const { Meta } = Card;
@@ -17,6 +18,7 @@ const dbRef = Firebase.database().ref('System/Products');
 const ProductDetails = (props) => {
     const { id } = useParams();
     const [snapshot, loading, error] = useObject(dbRef.child(id));
+    const [showEditModal, setShowEditModal] = useState(false);
     const [product, setProduct] = useState(null);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
@@ -44,7 +46,18 @@ const ProductDetails = (props) => {
                         style={{ margin: '10px 16px 15px'}}
                     >
                         <MDBRow>
+                            <Dialog
+                                isShown={showEditModal}
+                                title="Edit Product"
+                                onCloseComplete={() => {setShowEditModal(false)}}
+                                shouldCloseOnOverlayClick={false}
+                                hasFooter={false}>
 
+                                <MDBCol md={12}>
+                                    <EditProductModal modal={setShowEditModal} editProduct={product}/>
+                                </MDBCol>
+
+                            </Dialog>
                             <MDBCol md={9}>
                                 <Card className="mt-2 w-100">
                                     <MDBRow>
@@ -65,7 +78,7 @@ const ProductDetails = (props) => {
                                         </MDBCol>
                                         <MDBCol>
                                             <Button type="primary" className="mx-1" onClick={() => {
-                                                //showEditModal(projectDet, setEditProject, setEditModal);
+                                                setShowEditModal(true);
                                             }}>
                                                 <EditIcon color="info"/>
                                             </Button>

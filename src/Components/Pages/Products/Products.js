@@ -34,7 +34,6 @@ const Products = () => {
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const {images, setImages} = useGetImages("products")
-    const [showEditModal, setShowEditModal] = useState(false);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
@@ -104,17 +103,7 @@ const Products = () => {
 
                                 </Dialog>
 
-                                <Dialog
-                                    isShown={showEditModal}
-                                    title="Edit Product"
-                                    onCloseComplete={() => {setShowEditModal(false)}}
-                                    shouldCloseOnOverlayClick={false}
-                                    hasFooter={false}>
 
-                                    <MDBCol md={12}>
-                                    </MDBCol>
-
-                                </Dialog>
 
                                 <Dialog
                                     isShown={viewModal}
