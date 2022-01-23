@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import SideBar from "../Navbars/SideBar";
-import NavBar from "../Navbars/NavBar";
+import SideBar from "../../Navbars/SideBar";
+import NavBar from "../../Navbars/NavBar";
 import Button from "@material-tailwind/react/Button";
 import {Card, Layout, List, Table, Tooltip} from "antd";
 import {
@@ -14,10 +14,11 @@ import {
 } from "mdbreact";
 import {Text} from "react-font";
 import {useListVals} from "react-firebase-hooks/database";
-import Firebase from "../Firebase";
+import Firebase from "../../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
-import CreateProductModal from "../Modals/Product/CreateProductModal";
+import CreateProductModal from "../../Modals/Product/CreateProductModal";
+import {useGetImages} from "../../hooks/useGetImages";
 
 
 const dbRef = Firebase.database().ref('System/Products');
@@ -32,6 +33,7 @@ const Products = () => {
     const [dataArray, setDataArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
+    const {images, setImages} = useGetImages("products")
     const [showEditModal, setShowEditModal] = useState(false);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
@@ -42,13 +44,26 @@ const Products = () => {
 
     useEffect(() => {
 
+        var tempArray = [];
         if(products){
-            
-        }
-    }, [products]);
+            products.map((product) => {
+                var url = images&&images[images.findIndex(x => x.name === String(product.productID))];
+                product.url = url&&url.url;
+                tempArray.push(product);
+            });
 
-    const handleProceed = (id) => {
-        history.push(generatePath("/products/:id", { id }));
+            setDataArray([...tempArray]);
+        }
+        
+        if(error){
+            setShowDeleteAlert(true);
+            setMessage("Unable to fetch products");
+            setColor("danger");
+        }
+    }, [error, images, products]);
+
+    const handleProceed = (id, url) => {
+        history.push({pathname : generatePath("/products/:id", { id }), state: {url: url}});
     };
 
     const handleSearch = searchText => {
@@ -156,28 +171,28 @@ const Products = () => {
                                         <div>
                                             <List
                                                 grid={{gutter:18, column: 3 }}
-                                                //loading={memberLoading}
-                                                dataSource={[
-                                                    {key:1, name: "Eggs"},
-                                                    {key:1, name: "Chickens"},
-                                                    {key:1, name: "Parts"},
-                                                ]}
+                                                loading={loading}
+                                                dataSource={dataArray}
                                                 renderItem={item => (
                                                     <List.Item className="w-100">
                                                         <Card
                                                             className="w-100"
                                                             actions={[
-                                                                <b><i className="eye icon"/>3545 views</b>,
-                                                                <b><i className="book icon"/>46 sales</b>,
-                                                                <Button type="primary"
-                                                                        className="white-text"
-                                                                        style={{background: "#f69a00", borderColor: "#f69a06"}}>
-                                                                    <EyeOpenIcon color="white" onClick={() => {}}/></Button>,
+                                                                <div
+                                                                    onClick={() => {handleProceed(item.productID, item.url)}}
+                                                                    className="d-flex justify-content-between align-items-center mx-3">
+                                                                    <b className="mx-2"><MDBIcon icon="warehouse"/>&nbsp;3545</b>
+                                                                    <Button type="primary"
+                                                                            className="white-text mx-2"
+                                                                            style={{background: "#f69a00", borderColor: "#f69a06"}}>
+                                                                        <EyeOpenIcon color="white" onClick={() => {}}/></Button>
+                                                                </div>
+
                                                             ]}>
-                                                            <img className="w-100 mb-2" style={{ height:"12rem"}} src={"https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"}/>
+                                                            <img className="w-100 mb-2" style={{ height:"12rem"}} src={item.url}/>
                                                             <Meta
                                                                 title={<b>{item.name}</b>}
-                                                                description={"Product"}
+                                                                description={item.description}
                                                             />
                                                         </Card>
                                                     </List.Item>

@@ -15,7 +15,7 @@ const TabList = (props) => {
 
     useEffect(() => {
         setCollapsed(props.collapsed);
-        console.log(props.collapsed);
+        //console.log(props.collapsed);
     }, [props]);
 
     const handleRoutes = (route) => {

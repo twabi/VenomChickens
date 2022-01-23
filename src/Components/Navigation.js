@@ -9,7 +9,7 @@ import Home from "./Pages/Home";
 import Employees from "./Pages/Employees";
 import Dealers from "./Pages/Dealers/Dealers";
 import DealerDetails from "./Pages/Dealers/DealerDetails";
-import Products from "./Pages/Products";
+import Products from "./Pages/Products/Products";
 import Branches from "./Pages/Branches";
 import Sales from "./Pages/Sales";
 

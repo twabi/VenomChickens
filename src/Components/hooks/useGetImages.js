@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Firebase from "./Firebase";
+import Firebase from "../Firebase";
 
 
 var storageRef = Firebase.storage().ref("/");
