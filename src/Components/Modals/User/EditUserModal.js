@@ -31,33 +31,22 @@ const EditUserModal = (props) => {
         setRole(option);
     }
 
-
     useEffect(() => {
         setUser(props.editUser);
-        setGender(props.editUser.gender);
-        setDOB(props.editUser.dob);
-        setRole(props.editUser.role);
-    }, [props.editUser])
+    }, [props])
 
-    const editUser = () => {
-
-        var firstname = document.getElementById("firstname").value;
-        var lastname = document.getElementById("surname").value;
-        var email = document.getElementById("email").value
-        var phone = document.getElementById("phone").value;
-        var department = document.getElementById("department").value;
+    const editUser = (values) => {
 
 
         setShowLoading(true);
         var payload = {
-            "firstname" : firstname,
-            "surname" : lastname,
-            "email" : email,
-            "phone" : phone,
-            "gender" : gender,
+            "firstname" : values.firstname,
+            "surname" : values.surname,
+            "email" : values.email,
+            "phone" : values.phone,
+            "gender" : values.gender,
             "dob" : DOB,
-            "department" : department,
-            "role" : role,
+            "role" : values.role,
         };
 
         FireFetch.updateInDB("Users", user.userID, payload)
@@ -79,11 +68,7 @@ const EditUserModal = (props) => {
                 setShowLoading(false);
                 setShowAlert(true);
         });
-
     }
-
-
-
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -94,35 +79,42 @@ const EditUserModal = (props) => {
                 layout="vertical"
                 onFinish={editUser}
                 onFinishFailed={onFinishFailed}
+                initialValues={{
+                    firstname: user.firstname,
+                    surname: user.surname,
+                    email: user.email,
+                    phone: user.phone,
+                    DOB: !user.dob ? undefined : moment(user.dob, "YYYY-MM-DD"),
+                    gender: user.gender,
+                    role: user.role
+                }}
             >
 
-                <Form.Item label="First name">
-                    <Input placeholder="enter user firstname" defaultValue={user.firstname} id="firstname"/>
+                <Form.Item label="First name" name="firstname">
+                    <Input placeholder="enter user firstname" id="firstname"/>
                 </Form.Item>
-                <Form.Item label="Surname">
-                    <Input placeholder="enter user surname" defaultValue={user.surname} id="surname"/>
+                <Form.Item label="Surname" name="surname">
+                    <Input placeholder="enter user surname" id="surname"/>
                 </Form.Item>
-                <Form.Item label="Email" >
-                    <Input type="email" defaultValue={user.email} placeholder="enter user email" id="email"/>
+                <Form.Item label="Email" name="email">
+                    <Input type="email" placeholder="enter user email" id="email"/>
                 </Form.Item>
-                <Form.Item label="Phone">
-                    <Input type="phone" defaultValue={user.phone} placeholder="enter user phone number" id="phone"/>
+                <Form.Item label="Phone" name="phone">
+                    <Input type="phone" placeholder="enter user phone number" id="phone"/>
                 </Form.Item>
                 <Form.Item
-                    label="Select Date of Birth">
+                    label="Select Date of Birth" name="DOB">
                     <DatePicker
                         placeholder="select starting date"
                         picker={"date"}
-                        value={!DOB ? undefined : moment(DOB, "YYYY-MM-DD")}
                         className="w-100"
                         onChange={onChangeOne} />
 
                 </Form.Item>
 
-                <Form.Item label="Gender">
+                <Form.Item label="Gender" name="gender">
                     <Select placeholder="Select user gender"
                             showSearch
-                            value={gender}
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -137,13 +129,9 @@ const EditUserModal = (props) => {
 
                     </Select>
                 </Form.Item>
-                <Form.Item label="Department">
-                    <Input type="text" placeholder="enter user department" defaultValue={user.department} id="department"/>
-                </Form.Item>
-                <Form.Item label="Role">
+                <Form.Item label="Role" name="role">
                     <Select placeholder="Select user role"
                             showSearch
-                            value={role}
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -152,27 +140,24 @@ const EditUserModal = (props) => {
                                 optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                             }
                             onChange={changeRole}>
-                        {["Admin", "SalesRep"].map((item, index) => (
+                        {["Team-Principal", "Sales-Rep", "Storage-Manager", "Branches-Manager"].map((item, index) => (
                             <Select.Option key={index}  value={item}>{item}</Select.Option>
                         ))}
 
                     </Select>
                 </Form.Item>
-
+                {showAlert?
+                    <>
+                        <MDBAlert color={color} className="my-3 font-italic" >
+                            {message}
+                        </MDBAlert>
+                    </>
+                    : null }
                 <Form.Item>
-                    {showAlert?
-                        <>
-                            <MDBAlert color={color} className="my-3 font-italic" >
-                                {message}
-                            </MDBAlert>
-                        </>
-                        : null }
+                    <Button appearance="primary" htmlType="submit" isLoading={showLoading}>
+                        Edit
+                    </Button>
                 </Form.Item>
-
-                <Button appearance="primary" htmlType="submit" isLoading={showLoading}>
-                    Edit
-                </Button>
-
             </Form>
 
         </div>

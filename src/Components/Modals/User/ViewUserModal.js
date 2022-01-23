@@ -42,14 +42,8 @@ const ViewUserModal = (props) => {
                     <Input type="phone" disabled={true} defaultValue={user.phone} placeholder="enter user phone number" id="phone"/>
                 </Form.Item>
                 <Form.Item
-                    label="Select Date of Birth">
-                    <DatePicker
-                        placeholder="select starting date"
-                        picker={"date"}
-                        value={!DOB ? undefined : moment(DOB, "YYYY-MM-DD")}
-                        className="w-100"
-                        disabled={true}/>
-
+                    label="Date of Birth">
+                    <Input type="text" disabled={true} defaultValue={moment(user.dob, "YYYY-MM-DDTh:mm").format("DD MMM YYYY")} id="department"/>
                 </Form.Item>
 
                 <Form.Item label="Gender">
@@ -70,9 +64,6 @@ const ViewUserModal = (props) => {
 
                     </Select>
                 </Form.Item>
-                <Form.Item label="Department">
-                    <Input type="text" placeholder="enter user department" disabled={true} defaultValue={user.department} id="department"/>
-                </Form.Item>
                 <Form.Item label="Role">
                     <Select placeholder="Select user role"
                             showSearch
@@ -85,7 +76,7 @@ const ViewUserModal = (props) => {
                                 optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                             }
                             disabled={true}>
-                        {["Admin", "SalesRep"].map((item, index) => (
+                        {["Team-Principal", "Sales-Rep", "Storage-Manager", "Branches-Manager"].map((item, index) => (
                             <Select.Option key={index}  value={item}>{item}</Select.Option>
                         ))}
 

@@ -18,10 +18,13 @@ import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
 import CreateUserModal from "../Modals/User/CreateUserModal";
+import EditUserModal from "../Modals/User/EditUserModal";
+import ViewUserModal from "../Modals/User/ViewUserModal";
 
 
 const dbRef = Firebase.database().ref('System/Users');
 const { Content } = Layout;
+const moment = require("moment");
 const Employees = () => {
 
     const columns = [
@@ -78,21 +81,31 @@ const Employees = () => {
     useEffect(() => {
         var tempArray = [];
         if(employees){
-            employees.map((employee) =>{
+            employees.map((employee, index) =>{
                 tempArray.push({
-                    key: 1,
-                    name: "Jack Bauer",
-                    email: "jack@hotmail.com",
-                    books: 7,
-                    created: new Date(2021, 11, 12),
-                    action: <div>
-                        <Button intent="primary" onClick={() => {
-                            //setSelectedTask(task);
+                    key: index+1,
+                    name: employee.firstname + " " + employee.surname,
+                    email: employee.email,
+                    phone: employee.phone,
+                    role: employee.role,
+                    created: moment(employee.dateCreated, "YYYY-MM-DDTh:mm").format("DD MMM YYYY"),
+                    action: <div className="d-flex flex-row">
+                        <Button buttonType="outline"
+                                size="sm" onClick={() => {
+                            setEditUser(employee);
                             setViewModal(true);
                         }}>
                             <EyeOpenIcon color="blue700"/>
                         </Button>
-                        <Button intent="danger" onClick={() => {
+                        <Button buttonType="outline"
+                                size="sm" onClick={() => {
+                            setEditUser(employee);
+                            setShowEditModal(true);
+                        }}>
+                            <EditIcon color="primary"/>
+                        </Button>
+                        <Button buttonType="outline"
+                                size="sm" onClick={() => {
                             // eslint-disable-next-line no-restricted-globals
                             if (confirm("Are you sure you want to delete Task?")) {
                                 //deleteTask(task.taskID);
@@ -100,12 +113,7 @@ const Employees = () => {
                         }}>
                             <TrashIcon color="danger"/>
                         </Button>
-                        <Button intent="edit" onClick={() => {
-                            //setSelectedTask(task);
-                            //setEditModal(true);
-                        }}>
-                            <EditIcon color="primary"/>
-                        </Button></div>
+                        </div>
                 })
             })
         }
@@ -113,17 +121,13 @@ const Employees = () => {
         setDataArray([...tempArray]);
     }, [employees]);
 
-    //const handleProceed = (id) => {
-        //history.push(generatePath("/authors/:id", { id }));
-    //};
-
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
-            name = name.toLowerCase();
-            email = email.toLowerCase();
-            dpt = dpt.toLowerCase();
-            userRole = userRole.toLowerCase();
-            return name.includes(searchText) || email.includes(searchText) || dpt.includes(searchText) || userRole.includes(searchText);
+        const filteredEvents = userArray.filter(({ name, email, role, phone }) => {
+            name = name&&name.toLowerCase();
+            email = email&&email.toLowerCase();
+            role = role&&role.toLowerCase();
+            phone = phone&&phone.toLowerCase();
+            return name.includes(searchText) || email.includes(searchText) || role.includes(searchText) || phone.includes(searchText);
         });
 
         setDataArray(filteredEvents);
@@ -163,6 +167,7 @@ const Employees = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                        <EditUserModal modal={setShowEditModal} editUser={editUser}/>
                                     </MDBCol>
 
                                 </Dialog>
@@ -179,7 +184,7 @@ const Employees = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
-
+                                        <ViewUserModal editUser={editUser}/>
                                     </MDBCol>
 
                                 </Dialog>
