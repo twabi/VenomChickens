@@ -8,30 +8,26 @@ import Firebase from "../../Firebase";
 import {useListVals} from "react-firebase-hooks/database";
 
 
-var storageRef = Firebase.storage().ref("System/Outlets");
 const prodRef = Firebase.database().ref('System/Products');
+const userRef = Firebase.database().ref('System/Users');
 const moment = require("moment");
-const CreateOutletModal = (props) => {
+const CreateBranchModal = (props) => {
 
     const districts = ["Balaka", "Blantyre", "Chikwawa", "Chiradzulu", "Chitipa","Dedza", "Dowa", "Karonga","Kasungu", "Lilongwe", "Mchinji", "Nkhotakota", "Ntcheu", "Ntchisi", "Salima",
          "Likoma", 'Mzimba', "Nkhata Bay", "Rumphi", "Machinga", "Mangochi", "Mulanje", "Mwanza", "Neno" , "Nsanje",
         "Thyolo", "Phalombe", "Zomba"]
 
     const [products] = useListVals(prodRef);
+    const [users] = useListVals(userRef);
     const [showAlert, setShowAlert] = useState(false);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [showLoading, setShowLoading] = useState(false);
-    const [filesList, setFilesList] = useState([]);
     const [loggedInUser] = useAuthState(Firebase.auth());
     const [createdByID, setCreatedByID] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
-
-    const handleFileUpload = (e) => {
-        var tempArray = Object.values(e.target.files);
-        setFilesList(tempArray)
-    }
+    const [selectedUser, setSelectedUser] = useState(null);
 
     function changeProduct(options) {
         setSelectedProducts(options);
@@ -40,6 +36,10 @@ const CreateOutletModal = (props) => {
     function changeDistrict(option){
         setSelectedDistrict(option);
     }
+    function changeUser(option){
+        setSelectedUser(option);
+    }
+
     
     useEffect(() => {
         if(loggedInUser){
@@ -50,29 +50,18 @@ const CreateOutletModal = (props) => {
     }, [loggedInUser])
 
 
-    const addOutlet = () => {
+    const addBranch = (values) => {
         setShowLoading(true);
 
         var timeStamp = moment().format("YYYY-MM-DDTh:mm:ss");
-        var name = document.getElementById("outletName").value;
-        var area = document.getElementById("area").value;
-        var contactName = document.getElementById("contactName").value;
-        var contactEmail = document.getElementById("contactEmail").value
-        var contactPhone = document.getElementById("contactPhone").value;
-        var notes = document.getElementById("feedback").value;
-        var longitude = document.getElementById("long").value;
-        var latitude = document.getElementById("lat").value;
-
-        var outletID =  Array(20).fill("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+        var branchID =  Array(20).fill("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
             .map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-
-        var location = selectedDistrict + ", " + area;
 
         var overObj = {}
         selectedProducts.map((item) => {
 
             var obj = {
-                "quantity" : 0,
+                "stockCount" : 0,
                 "updatedAt" : timeStamp,
                 "productID" : item
             }
@@ -80,60 +69,42 @@ const CreateOutletModal = (props) => {
             //prodArray.push(overObj);
         })
 
-        if(name.includes("/")){
-            alert("The name cannot include a slash, use a dash or another symbol instead")
-        } else {
-            var object = {
-                "name" : name,
-                "location" : location,
-                "contactPerson" : {
-                    "email" : contactEmail,
-                    "name" : contactName,
-                    "phone" : contactPhone
-                },
-                "coordinates" : {
-                    "longitude" : longitude,
-                    "latitude" : latitude
-                },
-                "dateCreated" : timeStamp,
-                "createdByID" : createdByID,
-                "feedbackNotes" : notes,
-                "outletID" : outletID,
-                "products" : overObj
-            };
+        var object = {
+            "name" : values.name,
+            "district" : values.district,
+            "Area" : values.area,
+            "coordinates" : {
+                "longitude" : values.longitude,
+                "latitude" : values.latitude
+            },
+            "dateCreated" : timeStamp,
+            "manager" : values.manager,
+            "createdByID" : createdByID,
+            "branchID" : branchID,
+            "products" : overObj
+        };
 
-            console.log(object);
+        console.log(object);
 
-
-
-            const output = FireFetch.SaveTODB("Outlets", outletID, object);
-            output.then((result) => {
-                console.log(result);
-                if(result === "success"){
-                    setMessage("Outlet added successfully");
-                    setColor("success");
-                    setShowAlert(true);
-                    setShowLoading(false);
-                    setTimeout(() => {
-                        setShowAlert(false);
-                        props.modal(false);
-                    }, 2000);
-
-
-                    filesList.map((file, index) => {
-                        storageRef.child(outletID).child(""+index).put(file).then(function(snapshot) {
-                            console.log('Uploaded a blob or file!');
-                        });
-                    })
-                }
-            }).catch((error) => {
-                setMessage("Unable to add outlet, an error occurred :: " + error);
-                setColor("danger");
+        const output = FireFetch.SaveTODB("Branches", branchID, object);
+        output.then((result) => {
+            console.log(result);
+            if(result === "success"){
+                setMessage("Branch added successfully");
+                setColor("success");
                 setShowAlert(true);
                 setShowLoading(false);
-            })
-
-        }
+                setTimeout(() => {
+                    setShowAlert(false);
+                    props.modal(false);
+                }, 2000);
+            }
+        }).catch((error) => {
+            setMessage("Unable to add branch, an error occurred :: " + error);
+            setColor("danger");
+            setShowAlert(true);
+            setShowLoading(false);
+        })
     }
 
 
@@ -144,19 +115,19 @@ const CreateOutletModal = (props) => {
         <div>
             <Form
                 layout="vertical"
-                onFinish={addOutlet}
+                onFinish={addBranch}
                 onFinishFailed={onFinishFailed}
             >
 
-                <Form.Item label="Outlet name"
-                           name="Outlet name"
+                <Form.Item label="Branch name"
+                           name="name"
                            rules={[{ required: true, message: 'Please input outlet name!' }]}>
-                    <Input placeholder="enter outlet name" id="outletName"/>
+                    <Input placeholder="enter name" id="outletName"/>
                 </Form.Item>
                 <Form.Item label="Location (District)"
-                           name="location(district)"
+                           name="district"
                            rules={[{ required: true, message: 'Please select a district!' }]}>
-                    <Select placeholder="Select District of Outlet"
+                    <Select placeholder="Select District"
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input, option) =>
@@ -165,7 +136,7 @@ const CreateOutletModal = (props) => {
                             filterSort={(optionA, optionB) =>
                                 optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                             }
-                            onChange={changeProduct}>
+                            onChange={changeDistrict}>
                         {districts.sort().map((item, index) => (
                             <Select.Option key={index}  value={item}>{item}</Select.Option>
                         ))}
@@ -173,7 +144,7 @@ const CreateOutletModal = (props) => {
                     </Select>
                 </Form.Item>
                 <Form.Item label="Location (Area)"
-                           name="location(area)"
+                           name="area"
                            rules={[{ required: true, message: 'Please input area!' }]}>
                     <Input placeholder="enter area of outlet in the district" id="area"/>
                 </Form.Item>
@@ -187,38 +158,29 @@ const CreateOutletModal = (props) => {
                     <Input type="number" placeholder="enter longitude" defaultValue={0} id="long"/>
                 </Form.Item>
 
-                <Form.Item label="Outlet Contact Person Name"
-                           name="contactName"
-                           rules={[{ required: true, message: 'Please input outlet contact name!' }]}>
-                    <Input type="text" placeholder="enter outlet contact person name" id="contactName"/>
-                </Form.Item>
-
-                <Form.Item label="Outlet Contact Phone"
-                           name="Phone"
-                           rules={[{ required: true, message: 'Please input outlet Phone!' }]}>
-                    <Input type="phone" placeholder="enter user phone number" id="contactPhone"/>
-                </Form.Item>
-                <Form.Item label="Outlet Contact Email">
-                    <Input type="text" placeholder="enter contact email address" id="contactEmail"/>
-                </Form.Item>
-
-                <Form.Item label="Feedback Notes">
-                    <Input type="text" placeholder="enter outlet notes" id="feedback"/>
-                </Form.Item>
-
-                <Form.Item label="Upload Outlet Images"
-                           name="images"
-                           rules={[{ required: true, message: 'Please upload atleast one outlet image!' }]}>
-                    <Input type="file"
-                           multiple
-                           style={{ width: "100%" }}
-                           accept="image/*"
-                           onChange={handleFileUpload}
-                           placeholder="outlet image" id="outletImage"/>
-                </Form.Item>
-
-                <Form.Item label="Outlet Products">
+                <Form.Item label="Branch Manager"
+                           name="manager"
+                           rules={[{ required: true, message: 'Please select manager!' }]}>
                     <Select placeholder="Select Products that the Outlet has"
+                            showSearch
+                            mode="multiple"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            filterSort={(optionA, optionB) =>
+                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                            }
+                            onChange={changeUser}>
+                        {users.map((item, index) => (
+                            <Select.Option key={index}  value={item.userID}>{item.firstname + " " + item.lastname}</Select.Option>
+                        ))}
+
+                    </Select>
+                </Form.Item>
+
+                <Form.Item name="products" label="Branch Products">
+                    <Select placeholder="Select Products"
                             showSearch
                             mode="multiple"
                             optionFilterProp="children"
@@ -255,4 +217,4 @@ const CreateOutletModal = (props) => {
 
 }
 
-export default CreateOutletModal;
+export default CreateBranchModal;

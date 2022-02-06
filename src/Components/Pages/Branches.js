@@ -30,18 +30,18 @@ const Branches = () => {
             key: 'key',
         },
         {
-            title: 'Fullname',
+            title: 'Name',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Location',
+            dataIndex: 'location',
+            key: 'location',
         },{
-            title: 'Books',
-            dataIndex: 'books',
-            key: 'books',
+            title: 'In-Charge',
+            dataIndex: 'charge',
+            key: 'charge',
         },{
             title: 'Created',
             dataIndex: 'created',
@@ -55,14 +55,13 @@ const Branches = () => {
 
     const history = useHistory();
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-    const [employees, loading, error] = useListVals(dbRef);
+    const [branches, loading, error] = useListVals(dbRef);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
     const [userArray, setUserArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
-    const [editUser, setEditUser] = useState(null);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
@@ -71,24 +70,35 @@ const Branches = () => {
 
 
     useEffect(() => {
+        
+        if(branches){
+            var tempArray = [];
+            branches.map(branch => {
+                tempArray.push({
+                    key:1,
+                    name: branch.name,
+                    location: branch.area,
+                    charge: branch.manager,
+                    created: branch.dateCreated,
+                    action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
+                })
+            })
+            setDataArray([...tempArray]);
+        }
 
-        setDataArray([{
-            key:1, name: "Zomba Branch", email: "jack@hotmail.com", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
-        }]);
-    }, []);
+
+    }, [branches]);
 
     const handleProceed = (id) => {
-        history.push(generatePath("/authors/:id", { id }));
+        history.push(generatePath("/branches/:id", { id }));
     };
 
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
+        const filteredEvents = userArray.filter(({ name, location, charge }) => {
             name = name.toLowerCase();
-            email = email.toLowerCase();
-            dpt = dpt.toLowerCase();
-            userRole = userRole.toLowerCase();
-            return name.includes(searchText) || email.includes(searchText) || dpt.includes(searchText) || userRole.includes(searchText);
+            location = location.toLowerCase();
+            charge = charge.toLowerCase();
+            return name.includes(searchText) || location.includes(searchText) || charge.includes(searchText);
         });
 
         setDataArray(filteredEvents);
