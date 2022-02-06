@@ -157,7 +157,7 @@ const EditBranchModal = (props) => {
                             }
                             onChange={changeUser}>
                         {users.map((item, index) => (
-                            <Select.Option key={index}  value={item.userID}>{item.firstname + " " + item.lastname}</Select.Option>
+                            <Select.Option key={index}  value={item.userID}>{item.firstname + " " + item.surname}</Select.Option>
                         ))}
 
                     </Select>

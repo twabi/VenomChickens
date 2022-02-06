@@ -17,6 +17,8 @@ import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
+import CreateBranchModal from "../Modals/Branches/CreateBranchModal";
+import EditBranchModal from "../Modals/Branches/EditBranchModal";
 
 
 const dbRef = Firebase.database().ref('System/Branches');
@@ -64,6 +66,7 @@ const Branches = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
+    const [editBranch, setEditBranch] = useState(null)
     const callback = (data) => {
         setCheckedData(data);
     }
@@ -125,6 +128,7 @@ const Branches = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                        <CreateBranchModal modal={setShowModal}/>
                                     </MDBCol>
 
                                 </Dialog>
@@ -137,23 +141,7 @@ const Branches = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
-                                    </MDBCol>
-
-                                </Dialog>
-
-                                <Dialog
-                                    isShown={viewModal}
-                                    title={
-                                        <div className="w-100 d-flex justify-content-between">
-                                            <b>View Branch</b>
-                                        </div>
-                                    }
-                                    onCloseComplete={() => {setViewModal(false)}}
-                                    shouldCloseOnOverlayClick={false}
-                                    hasFooter={false}>
-
-                                    <MDBCol md={12}>
-
+                                        <EditBranchModal modal={setShowEditModal} editBranch={editBranch}/>
                                     </MDBCol>
 
                                 </Dialog>

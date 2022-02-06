@@ -69,6 +69,7 @@ const CreateBranchModal = (props) => {
             //prodArray.push(overObj);
         })
 
+        console.log(values);
         var object = {
             "name" : values.name,
             "district" : values.district,
@@ -117,6 +118,7 @@ const CreateBranchModal = (props) => {
                 layout="vertical"
                 onFinish={addBranch}
                 onFinishFailed={onFinishFailed}
+                initialValues={{longitude: 0, latitude: 0}}
             >
 
                 <Form.Item label="Branch name"
@@ -150,12 +152,12 @@ const CreateBranchModal = (props) => {
                 </Form.Item>
                 <Form.Item label="Latitude" name="latitude"
                            rules={[]}>
-                    <Input type="number" placeholder="enter latitude" defaultValue={0} id="lat"/>
+                    <Input type="number" placeholder="enter latitude" id="lat"/>
 
                 </Form.Item>
                 <Form.Item label="Longitude" name="longitude"
                            rules={[]}>
-                    <Input type="number" placeholder="enter longitude" defaultValue={0} id="long"/>
+                    <Input type="number" placeholder="enter longitude" id="long"/>
                 </Form.Item>
 
                 <Form.Item label="Branch Manager"
@@ -173,7 +175,7 @@ const CreateBranchModal = (props) => {
                             }
                             onChange={changeUser}>
                         {users.map((item, index) => (
-                            <Select.Option key={index}  value={item.userID}>{item.firstname + " " + item.lastname}</Select.Option>
+                            <Select.Option key={index}  value={item.userID}>{item.firstname + " " + item.surname}</Select.Option>
                         ))}
 
                     </Select>
