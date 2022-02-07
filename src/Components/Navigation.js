@@ -10,9 +10,10 @@ import Employees from "./Pages/Employees";
 import Dealers from "./Pages/Dealers/Dealers";
 import DealerDetails from "./Pages/Dealers/DealerDetails";
 import Products from "./Pages/Products/Products";
-import Branches from "./Pages/Branches";
+import Branches from "./Pages/Branches/Branches";
 import Sales from "./Pages/Sales";
 import ProductDetails from "./Pages/Products/ProductDetails";
+import BranchDetails from "./Pages/Branches/BranchDetails";
 
 
 const Navigation = () => {
@@ -52,7 +53,7 @@ const Navigation = () => {
                     <Branches {...props} />)} exact />
 
                 <Route path="/branches/:id" render={(props) => (
-                    <DealerDetails {...props} />)} exact />
+                    <BranchDetails {...props} />)} exact />
 
                 <Route path="/sales" render={(props) => (
                     <Sales {...props} />)} exact />

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import SideBar from "../Navbars/SideBar";
-import NavBar from "../Navbars/NavBar";
+import SideBar from "../../Navbars/SideBar";
+import NavBar from "../../Navbars/NavBar";
 import Button from "@material-tailwind/react/Button";
 import {Card, Layout, Table, Tooltip} from "antd";
 import {
@@ -14,14 +14,16 @@ import {
 } from "mdbreact";
 import {Text} from "react-font";
 import {useListVals} from "react-firebase-hooks/database";
-import Firebase from "../Firebase";
+import Firebase from "../../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
-import CreateBranchModal from "../Modals/Branches/CreateBranchModal";
-import EditBranchModal from "../Modals/Branches/EditBranchModal";
+import CreateBranchModal from "../../Modals/Branches/CreateBranchModal";
+import EditBranchModal from "../../Modals/Branches/EditBranchModal";
 
 
 const dbRef = Firebase.database().ref('System/Branches');
+const userRef = Firebase.database().ref('System/Users');
+const moment = require("moment");
 const { Content } = Layout;
 const Branches = () => {
 
@@ -56,6 +58,7 @@ const Branches = () => {
     ];
 
     const history = useHistory();
+    const [users] = useListVals(userRef);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [branches, loading, error] = useListVals(dbRef);
     const [showModal, setShowModal] = useState(false);
@@ -75,22 +78,28 @@ const Branches = () => {
     useEffect(() => {
         
         if(branches){
-            var tempArray = [];
-            branches.map(branch => {
-                tempArray.push({
-                    key:1,
-                    name: branch.name,
-                    location: branch.area,
-                    charge: branch.manager,
-                    created: branch.dateCreated,
-                    action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("authorID1234")}} size="2x" />
+            if(users){
+
+                var tempArray = [];
+                branches.map(branch => {
+                    tempArray.push({
+                        key:1,
+                        name: branch.name,
+                        location: branch.district+ ", " + branch.Area,
+                        charge: users[users.findIndex(user => user.userID===branch.manager)]&&
+                            users[users.findIndex(user => user.userID===branch.manager)].firstname + " " +
+                            users[users.findIndex(user => user.userID===branch.manager)].surname,
+                        created: moment(branch.dateCreated, "YYYY-MM-DDTh:mm").format("DD MMM YYYY"),
+                        action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("branchID1234")}} size="2x" />
+                    })
                 })
-            })
-            setDataArray([...tempArray]);
+                setDataArray([...tempArray]);
+            }
+
         }
 
 
-    }, [branches]);
+    }, [users, branches]);
 
     const handleProceed = (id) => {
         history.push(generatePath("/branches/:id", { id }));
