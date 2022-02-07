@@ -63,7 +63,7 @@ const Branches = () => {
     const [branches, loading, error] = useListVals(dbRef);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
-    const [userArray, setUserArray] = useState([]);
+    const [branchArray, setBranchArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
@@ -90,10 +90,11 @@ const Branches = () => {
                             users[users.findIndex(user => user.userID===branch.manager)].firstname + " " +
                             users[users.findIndex(user => user.userID===branch.manager)].surname,
                         created: moment(branch.dateCreated, "YYYY-MM-DDTh:mm").format("DD MMM YYYY"),
-                        action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("branchID1234")}} size="2x" />
+                        action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed(branch.branchID)}} size="2x" />
                     })
                 })
                 setDataArray([...tempArray]);
+                setBranchArray([...tempArray]);
             }
 
         }
@@ -106,7 +107,7 @@ const Branches = () => {
     };
 
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, location, charge }) => {
+        const filteredEvents = branchArray.filter(({ name, location, charge }) => {
             name = name.toLowerCase();
             location = location.toLowerCase();
             charge = charge.toLowerCase();

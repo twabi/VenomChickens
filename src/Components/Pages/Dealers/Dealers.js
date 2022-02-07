@@ -17,9 +17,12 @@ import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
+import CreateDealer from "../../Modals/Dealer/CreateDealer";
+import EditDealer from "../../Modals/Dealer/EditDealer";
 
 
 const dbRef = Firebase.database().ref('System/Dealers');
+const moment = require('moment');
 const { Content } = Layout;
 const Dealers = () => {
 
@@ -39,10 +42,20 @@ const Dealers = () => {
             dataIndex: 'email',
             key: 'email',
         },{
-            title: 'Books',
-            dataIndex: 'books',
-            key: 'books',
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone',
         },{
+            title: 'Code',
+            dataIndex: 'code',
+            key: 'code',
+        },
+        {
+            title: 'Location',
+            dataIndex: 'location',
+            key: 'location',
+        },
+        {
             title: 'Created',
             dataIndex: 'created',
             key: 'created',
@@ -56,14 +69,13 @@ const Dealers = () => {
     const history = useHistory();
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [dealers, loading, error] = useListVals(dbRef);
+    const [editDealer, setEditDealer] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
-    const [userArray, setUserArray] = useState([]);
+    const [dealerArray, setDealerArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
-    const [editUser, setEditUser] = useState(null);
-    const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
         setCheckedData(data);
@@ -71,26 +83,38 @@ const Dealers = () => {
 
 
     useEffect(() => {
-
-        setDataArray([{
-            key:1, name: "Jack Bauer", email: "jack@hotmail.com", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed("dealerID1234")}} size="2x" />
-        }]);
-    }, []);
+        if(dealers){
+            var tempArray = [];
+            dealers.map((dealer, index) => {
+                tempArray.push({
+                    key: index+1,
+                    name: dealer.firstname + " " + dealer.surname,
+                    email: dealer.email,
+                    phone: dealer.phone,
+                    code: dealer.code,
+                    location: dealer.district + ", " + dealer.area,
+                    created: moment(dealer.dateCreated, "YYYY-MM-DDTh:mm").format("DD MMM YYYY"),
+                    action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed(dealer.dealerID)}} size="2x" />
+                })
+            });
+            setDataArray([...tempArray]);
+            setDealerArray([...tempArray]);
+        }
+        
+    }, [dealers]);
 
     const handleProceed = (id) => {
         history.push(generatePath("/dealers/:id", { id }));
     };
 
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
+        const filteredEvents = dealerArray.filter(({ name, email, code, location }) => {
             name = name.toLowerCase();
+            location = location.toLowerCase();
             email = email.toLowerCase();
-            dpt = dpt.toLowerCase();
-            userRole = userRole.toLowerCase();
-            return name.includes(searchText) || email.includes(searchText) || dpt.includes(searchText) || userRole.includes(searchText);
+            code = code.toLowerCase();
+            return name.includes(searchText) || email.includes(searchText) || code.includes(searchText) || location.includes(searchText);
         });
-
         setDataArray(filteredEvents);
     };
 
@@ -115,6 +139,7 @@ const Dealers = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                        <CreateDealer modal={setShowModal}/>
                                     </MDBCol>
 
                                 </Dialog>
@@ -127,23 +152,7 @@ const Dealers = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
-                                    </MDBCol>
-
-                                </Dialog>
-
-                                <Dialog
-                                    isShown={viewModal}
-                                    title={
-                                        <div className="w-100 d-flex justify-content-between">
-                                            <b>View Dealer</b>
-                                        </div>
-                                    }
-                                    onCloseComplete={() => {setViewModal(false)}}
-                                    shouldCloseOnOverlayClick={false}
-                                    hasFooter={false}>
-
-                                    <MDBCol md={12}>
-
+                                        <EditDealer modal={setShowEditModal} dealer={"selectedDealer"}/>
                                     </MDBCol>
 
                                 </Dialog>
