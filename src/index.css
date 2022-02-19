@@ -24,6 +24,6 @@ code {
 }
 
 .scroll {
-  height: 350px;
+  height: 360px;
   overflow-y: auto;
 }

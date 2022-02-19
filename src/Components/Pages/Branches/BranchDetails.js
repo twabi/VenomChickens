@@ -35,7 +35,7 @@ const BranchDetails = () => {
                     >
                         <MDBRow>
 
-                            <MDBCol md={9}>
+                            <MDBCol md={7}>
                                 <Card className="mt-2 w-100">
                                     <MDBRow>
                                         <MDBCol md={9}>
@@ -74,19 +74,13 @@ const BranchDetails = () => {
                                     <hr/>
                                     <MDBRow left style={{height:"350px"}}>
                                         <MDBCol>
-                                            <Card bordered={false} className="">
-                                                <img className="w-100" style={{ height:"20rem"}} src={"https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"}/>
-                                            </Card>
-                                        </MDBCol>
-                                        <MDBCol md={7}>
                                             <Card bordered={false} className="w-100 bg-white">
                                                 <div>
                                                     <Alert message={<>Name: &nbsp;&nbsp;<b>The Erring Gor</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Author: &nbsp;&nbsp;<b>John Smith</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>District: &nbsp;&nbsp;<b>John Smith</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Price: &nbsp;&nbsp;<b>K40</b></>}
-                                                           className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Area: &nbsp;&nbsp;<b>K40</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
                                                     <Alert message={<>Reads: &nbsp;&nbsp;<b>33</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
@@ -122,8 +116,6 @@ const BranchDetails = () => {
                                     <MDBRow>
                                         <Card bordered={false} className="w-100 bg-white scroll">
                                             <List
-                                                grid={{gutter:21 }}
-                                                //loading={memberLoading}
                                                 dataSource={[
                                                     {key:1, name: "Magazines"},
                                                     {key:1, name: "Novel"},

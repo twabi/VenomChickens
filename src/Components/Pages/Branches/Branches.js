@@ -86,9 +86,9 @@ const Branches = () => {
                         key:1,
                         name: branch.name,
                         location: branch.district+ ", " + branch.Area,
-                        charge: users[users.findIndex(user => user.userID===branch.manager)]&&
-                            users[users.findIndex(user => user.userID===branch.manager)].firstname + " " +
-                            users[users.findIndex(user => user.userID===branch.manager)].surname,
+                        charge: users[users.findIndex(user => user.userID===branch.manager[0])]&&
+                            users[users.findIndex(user => user.userID===branch.manager[0])].firstname + " " +
+                            users[users.findIndex(user => user.userID===branch.manager[0])].surname,
                         created: moment(branch.dateCreated, "YYYY-MM-DDTh:mm").format("DD MMM YYYY"),
                         action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {handleProceed(branch.branchID)}} size="2x" />
                     })

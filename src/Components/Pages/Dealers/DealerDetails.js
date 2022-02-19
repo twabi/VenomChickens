@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SideBar from "../../Navbars/SideBar";
 import {Alert, Card, Layout, List} from "antd";
 import NavBar from "../../Navbars/NavBar";
@@ -7,20 +7,37 @@ import {MDBCol, MDBRow} from "mdbreact";
 import {Text} from "react-font";
 import {AddIcon, Button, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
 import Firebase from "../../Firebase";
-import {useListVals} from "react-firebase-hooks/database";
+import {useListVals, useObject} from "react-firebase-hooks/database";
 import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
 
 const {Content} = Layout;
 const { Meta } = Card;
 const dbRef = Firebase.database().ref('System/Dealers');
+const saleRef = Firebase.database().ref('System/Sales');
+const moment = require('moment');
 const DealerDetails = () => {
     const { id } = useParams();
-    const [books, loading, error] = useListVals(dbRef);
+    const [snapshot, loading, error] = useObject(dbRef.child(id));
     const [checkedData, setCheckedData] = useState(true);
+    const [dealer, setDealer] = useState(null);
+    const [sales] = useListVals(saleRef);
+    const [salesArray, setSalesArray] = useState([]);
     const callback = (data) => {
         setCheckedData(data);
     }
+
+    useEffect(() => {
+        if(snapshot){
+            var object = snapshot.val();
+            setDealer(object);
+        }
+        
+        if(sales){
+            var tempArray = sales.filter(x => x.dealerID === id);
+            setSalesArray(tempArray);
+        }
+    }, [id, sales, snapshot])
 
 
     return (
@@ -35,7 +52,7 @@ const DealerDetails = () => {
                     >
                         <MDBRow>
 
-                            <MDBCol md={9}>
+                            <MDBCol md={7}>
                                 <Card className="mt-2 w-100">
                                     <MDBRow>
                                         <MDBCol md={9}>
@@ -74,23 +91,21 @@ const DealerDetails = () => {
                                     <hr/>
                                     <MDBRow left style={{height:"350px"}}>
                                         <MDBCol>
-                                            <Card bordered={false} className="">
-                                                <img className="w-100" style={{ height:"20rem"}} src={"https://mdbootstrap.com/img/Mockups/Lightbox/Thumbnail/img%20(67).webp"}/>
-                                            </Card>
-                                        </MDBCol>
-                                        <MDBCol md={7}>
                                             <Card bordered={false} className="w-100 bg-white">
                                                 <div>
-                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>The Erring Gor</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>{dealer&&dealer.firstname + " " + dealer.surname}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Author: &nbsp;&nbsp;<b>John Smith</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Code: &nbsp;&nbsp;<b>{dealer&&dealer.code}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Price: &nbsp;&nbsp;<b>K40</b></>}
-                                                           className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Email: &nbsp;&nbsp;<b>{dealer&&dealer.email}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Reads: &nbsp;&nbsp;<b>33</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Phone: &nbsp;&nbsp;<b>{dealer&&dealer.phone}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>created: &nbsp;&nbsp;<b>today</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>District: &nbsp;&nbsp;<b>{dealer&&dealer.district}</b></>} className="w-100 my-1 deep-orange-text"
+                                                           style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
+                                                    <Alert message={<>Area: &nbsp;&nbsp;<b>{dealer&&dealer.area}</b></>} className="w-100 my-1 deep-orange-text"
+                                                           style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
+                                                    <Alert message={<>created: &nbsp;&nbsp;<b>{dealer&&moment(dealer.dateCreated, "YYYY-MM-DDTh:mm:ss").format("DD MMM YYYY")}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
 
                                                 </div>
@@ -122,8 +137,6 @@ const DealerDetails = () => {
                                     <MDBRow>
                                         <Card bordered={false} className="w-100 bg-white scroll">
                                             <List
-                                                grid={{gutter:21 }}
-                                                //loading={memberLoading}
                                                 dataSource={[
                                                     {key:1, name: "Magazines"},
                                                     {key:1, name: "Novel"},
