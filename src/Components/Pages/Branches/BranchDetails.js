@@ -12,6 +12,7 @@ import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
 import EditBranchModal from "../../Modals/Branches/EditBranchModal";
 import AddProduct from "../../Modals/Branches/AddProduct";
+import EditStock from "../../Modals/Branches/EditStock";
 
 
 const {Content} = Layout;
@@ -34,6 +35,8 @@ const BranchDetails = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editBranch, setEditBranch] = useState(null)
     const [showAddModal, setShowAddModal] = useState(false);
+    const [updateModal, setUpdateModal] = useState(false);
+    const [editProduct, setEditProduct] = useState(null);
     const callback = (data) => {
         setCheckedData(data);
     }
@@ -80,6 +83,14 @@ const BranchDetails = () => {
                                 shouldCloseOnOverlayClick={false}
                                 hasFooter={false}>
                                 <AddProduct editBranch={editBranch} modal={setShowAddModal}/>
+                            </Dialog>
+                            <Dialog
+                                isShown={updateModal}
+                                title="Update Stock Count"
+                                onCloseComplete={() => {setUpdateModal(false)}}
+                                shouldCloseOnOverlayClick={false}
+                                hasFooter={false}>
+                                <EditStock editBranch={editBranch} product={editProduct} modal={setUpdateModal}/>
                             </Dialog>
                             <MDBCol md={7}>
                                 <Card className="mt-2 w-100">
@@ -220,18 +231,20 @@ const BranchDetails = () => {
                                     <MDBRow>
                                         <Card bordered={false} className="w-100 bg-white">
                                             <List
-                                                grid={{gutter:16, column: 4 }}
+                                                grid={{gutter:16, column: 3 }}
                                                 //loading={memberLoading}
                                                 dataSource={prodArray}
                                                 renderItem={item => (
                                                     <List.Item>
                                                         <Card
                                                             className="w-100"
-                                                            actions={[<TrashIcon color="danger" className="mx-4" onClick={() => {
+                                                            actions={[<TrashIcon color="danger" className="mx-4 text-center" onClick={() => {
                                                                 // eslint-disable-next-line no-restricted-globals
                                                                 if (confirm("Are you sure you want to remove user from this project?")) {
                                                                     //deleteMember(item.id)
                                                                 }
+                                                            }}/>,  <EditIcon color="info" className="mx-4 text-center" onClick={() => {
+                                                                setEditBranch(branch); setEditProduct(item); setUpdateModal(true);
                                                             }}/>]}>
                                                             <Meta
                                                                 avatar={<Avatar className="rounded float-left d-inline"
