@@ -17,6 +17,8 @@ import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
 import {generatePath} from "react-router";
+import CreateSaleModal from "../Modals/Sales/CreateSaleModal";
+import EditBranchModal from "../Modals/Branches/EditBranchModal";
 
 
 const dbRef = Firebase.database().ref('System/Sales');
@@ -97,10 +99,6 @@ const Sales = () => {
         }]);
     }, []);
 
-    const handleProceed = (id) => {
-        history.push(generatePath("/authors/:id", { id }));
-    };
-
     const handleSearch = searchText => {
         const filteredEvents = saleArray.filter(({ name, email, dpt, userRole }) => {
             name = name.toLowerCase();
@@ -138,7 +136,19 @@ const Sales = () => {
                                     hasFooter={false}>
 
                                     <MDBCol md={12}>
+                                    </MDBCol>
 
+                                </Dialog>
+
+                                <Dialog
+                                    isShown={showModal}
+                                    title="Create Sale"
+                                    onCloseComplete={() => {setShowModal(false)}}
+                                    shouldCloseOnOverlayClick={false}
+                                    hasFooter={false}>
+
+                                    <MDBCol md={12}>
+                                        <CreateSaleModal modal={setShowModal}/>
                                     </MDBCol>
 
                                 </Dialog>
@@ -159,6 +169,9 @@ const Sales = () => {
 
                                             <MDBRow className="ml-1">
                                                 <SearchInput height={40} placeholder="Search sales" className="w-100"   onChange={e => handleSearch(e.target.value)} />
+                                                <Button size="large" type="primary" style={{background: "#f69a00", borderColor: "#f69a06"}} className="mx-2" onClick={() => {setShowModal(true)}}>
+                                                    New Sale
+                                                </Button>
                                             </MDBRow>
                                         </MDBCol>
 
