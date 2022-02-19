@@ -8,7 +8,6 @@ import Firebase from "../../Firebase";
 import {useAuthState} from "react-firebase-hooks/auth";
 
 const moment = require("moment");
-const branchRef = Firebase.database().ref('System/Branches');
 const userRef = Firebase.database().ref('System/Users');
 const prodRef = Firebase.database().ref('System/Products');
 const dealerRef = Firebase.database().ref('System/Dealers');
@@ -19,8 +18,6 @@ const CreateSaleModal = (props) => {
     const [products] = useListVals(prodRef);
     const [users] = useListVals(userRef);
     const [dealers] = useListVals(dealerRef);
-    const [branches] = useListVals(branchRef);
-    const [gender, setGender] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
@@ -77,10 +74,8 @@ const CreateSaleModal = (props) => {
         if(values.paymentType === "On-Credit"){
             accRef.orderByChild("dealerID").equalTo(values.dealer).on("child_added", function (snapshot){
                 var account = snapshot.val();
-                console.log(account);
                 var newBalance = parseFloat(account.balance) - parseFloat(values.total);
                 //stdout.write(newBalance);
-                console.log(newBalance);
                 var newObject = {
                     "balance" : newBalance
                 }
@@ -89,8 +84,7 @@ const CreateSaleModal = (props) => {
                 });
             });
         }
-        const output = FireFetch.SaveTODB("Sales", saleID, object);
-        output.then((result) => {
+        FireFetch.SaveTODB("Sales", saleID, object).then((result) => {
             console.log(result);
             if(result === "success"){
                 setMessage("Sale added successfully");

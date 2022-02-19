@@ -16,9 +16,7 @@ import {Text} from "react-font";
 import {useListVals} from "react-firebase-hooks/database";
 import Firebase from "../Firebase";
 import {useHistory} from "react-router-dom";
-import {generatePath} from "react-router";
 import CreateSaleModal from "../Modals/Sales/CreateSaleModal";
-import EditBranchModal from "../Modals/Branches/EditBranchModal";
 
 
 const dbRef = Firebase.database().ref('System/Sales');
@@ -26,6 +24,7 @@ const branchRef = Firebase.database().ref('System/Branches');
 const userRef = Firebase.database().ref('System/Users');
 const prodRef = Firebase.database().ref('System/Products');
 const dealerRef = Firebase.database().ref('System/Dealers');
+const moment = require('moment');
 const { Content } = Layout;
 const Sales = () => {
 
@@ -67,7 +66,6 @@ const Sales = () => {
         },
     ];
 
-    const history = useHistory();
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [sales, loading, error] = useListVals(dbRef);
     const [users] = useListVals(userRef);
@@ -76,7 +74,7 @@ const Sales = () => {
     const [branches] = useListVals(branchRef);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
-    const [saleArray, setSalesArray] = useState([])
+    const [salesArray, setSalesArray] = useState([])
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
     const [viewModal, setViewModal] = useState(false);
@@ -87,25 +85,48 @@ const Sales = () => {
 
 
     useEffect(() => {
+        if(sales){
+            var tempArray = [];
+            sales.map((sale, index) => {
+                tempArray.push({
+                    key: index+1,
+                    amount: sale.totalPrice,
+                    product: products[products.findIndex(prod => prod.productID===sale.product)]&&
+                        products[products.findIndex(prod => prod.productID===sale.product)].name,
+                    dealer: dealers[dealers.findIndex(dealer => dealer.dealerID===sale.dealer)]&&
+                        dealers[dealers.findIndex(dealer => dealer.dealerID===sale.dealer)].firstname + " " +
+                        dealers[dealers.findIndex(dealer => dealer.dealerID===sale.dealer)].surname,
+                    salesrep: users[users.findIndex(user => user.userID===sale.salesRep)]&&
+                        users[users.findIndex(user => user.userID===sale.salesRep)].firstname + " " +
+                        users[users.findIndex(user => user.userID===sale.salesRep)].surname,
+                    branch: branches[branches.findIndex(branch => branch.branchID===sale.branch)]&&
+                        branches[branches.findIndex(branch => branch.branchID===sale.branch)].name,
+                    date: moment(sale.dateCreated, "YYYY-MM-DDTh:mm:ss").format("DD MMM YYYY - HH:mm"),
+                    action : <Button appearance="default" onClick={() => {
+                        //setSelectedTask(task);
+                        //setViewModal(true);
+                    }}>
+                        <EyeOpenIcon color="blue700"/>
+                    </Button>
+                    
+                })
+            })
+            setDataArray([...tempArray]);
+            setSalesArray([...tempArray]);
+        }
 
-        setDataArray([{
-            key:1, name: "Jack Bauer", email: "Eggs", books: 7, created: new Date(2021,11,12),
-            action : <Button appearance="default" onClick={() => {
-                //setSelectedTask(task);
-                //setViewModal(true);
-            }}>
-                <EyeOpenIcon color="blue700"/>
-            </Button>
-        }]);
-    }, []);
+        
+    }, [branches, dealers, products, sales, users]);
 
     const handleSearch = searchText => {
-        const filteredEvents = saleArray.filter(({ name, email, dpt, userRole }) => {
-            name = name.toLowerCase();
-            email = email.toLowerCase();
-            dpt = dpt.toLowerCase();
-            userRole = userRole.toLowerCase();
-            return name.includes(searchText) || email.includes(searchText) || dpt.includes(searchText) || userRole.includes(searchText);
+        const filteredEvents = salesArray.filter(({ product, dealer, salesrep, branch, amount }) => {
+            product = product.toLowerCase();
+            salesrep = salesrep.toLowerCase();
+            branch = branch.toLowerCase();
+            amount = amount.toLowerCase();
+            dealer = dealer.toLowerCase();
+            return dealer.includes(searchText) || amount.includes(searchText) || branch.includes(searchText) ||
+                salesrep.includes(searchText) || product.includes(searchText);
         });
 
         setDataArray(filteredEvents);
