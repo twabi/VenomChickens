@@ -38,7 +38,8 @@ const EditBranchModal = (props) => {
 
 
     useEffect(() => {
-        //setSelectedBranch(props.editBranch);
+        console.log(props.editBranch);
+        setSelectedBranch(props.editBranch);
     }, [props])
 
 
@@ -95,10 +96,10 @@ const EditBranchModal = (props) => {
                 initialValues={{
                     name: selectedBranch.name,
                     district: selectedBranch.district,
-                    area: selectedBranch.area,
+                    area: selectedBranch.Area,
                     latitude: selectedBranch.coordinates.latitude,
                     longitude: selectedBranch.coordinates.longitude,
-                    products: selectedBranch.products,
+                    products: Object.keys(selectedBranch.products),
                     manager: selectedBranch.manager
                 }}
             >

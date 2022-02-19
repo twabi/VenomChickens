@@ -1,26 +1,51 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SideBar from "../../Navbars/SideBar";
-import {Alert, Card, Layout, List} from "antd";
+import {Alert, Avatar, Card, Layout, List} from "antd";
 import NavBar from "../../Navbars/NavBar";
 import {useParams} from "react-router";
 import {MDBCol, MDBRow} from "mdbreact";
 import {Text} from "react-font";
-import {AddIcon, Button, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
+import {AddIcon, Button, Dialog, EditIcon, EyeOpenIcon, TrashIcon} from "evergreen-ui";
 import Firebase from "../../Firebase";
-import {useListVals} from "react-firebase-hooks/database";
+import {useListVals, useObject} from "react-firebase-hooks/database";
 import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
+import EditBranchModal from "../../Modals/Branches/EditBranchModal";
+
 
 const {Content} = Layout;
 const { Meta } = Card;
 const dbRef = Firebase.database().ref('System/Branches');
+const saleRef = Firebase.database().ref('System/Sales');
+const userRef = Firebase.database().ref('System/Users');
+const prodRef = Firebase.database().ref('System/Products');
+const moment = require("moment");
 const BranchDetails = () => {
     const { id } = useParams();
-    const [branches, loading, error] = useListVals(dbRef);
+    const [sales] = useListVals(saleRef);
+    const [users] = useListVals(userRef);
+    const [products] = useListVals(prodRef);
+    const [snapshot, loading, error] = useObject(dbRef.child(id));
+    const [salesArray, setSalesArray] = useState([]);
+    const [branch, setBranch] = useState(null);
     const [checkedData, setCheckedData] = useState(true);
+    const [prodArray, setProdArray] = useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editBranch, setEditBranch] = useState(null)
     const callback = (data) => {
         setCheckedData(data);
     }
+    
+    useEffect(() => {
+        if(snapshot){
+            setBranch(snapshot.val())
+            setProdArray(Object.values(snapshot.val().products))
+        }
+        if(sales){
+            var tempArray = sales.filter(x => x.branchID === id);
+            setSalesArray(tempArray);
+        }
+    }, [id, sales, snapshot])
 
 
     return (
@@ -34,7 +59,18 @@ const BranchDetails = () => {
                         style={{ margin: '10px 16px 15px'}}
                     >
                         <MDBRow>
+                            <Dialog
+                                isShown={showEditModal}
+                                title="Edit Branch"
+                                onCloseComplete={() => {setShowEditModal(false)}}
+                                shouldCloseOnOverlayClick={false}
+                                hasFooter={false}>
 
+                                <MDBCol md={12}>
+                                    <EditBranchModal modal={setShowEditModal} editBranch={editBranch}/>
+                                </MDBCol>
+
+                            </Dialog>
                             <MDBCol md={7}>
                                 <Card className="mt-2 w-100">
                                     <MDBRow>
@@ -56,12 +92,13 @@ const BranchDetails = () => {
                                         <MDBCol>
                                             <Button type="primary" className="mx-1" onClick={() => {
                                                 //showEditModal(projectDet, setEditProject, setEditModal);
+                                                setEditBranch(branch); setShowEditModal(true);
                                             }}>
                                                 <EditIcon color="info"/>
                                             </Button>
                                             <Button className="mx-1" type="danger" onClick={() => {
                                                 // eslint-disable-next-line no-restricted-globals
-                                                if (confirm("Are you sure you want to delete project?")) {
+                                                if (confirm("Are you sure you want to delete branch?")) {
                                                     //deleteProject(projectDet.projectID, setMessage, setColor, setShowAlert);
                                                 }
 
@@ -76,15 +113,18 @@ const BranchDetails = () => {
                                         <MDBCol>
                                             <Card bordered={false} className="w-100 bg-white">
                                                 <div>
-                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>The Erring Gor</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Name: &nbsp;&nbsp;<b>{branch&&branch.name}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>District: &nbsp;&nbsp;<b>John Smith</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>District: &nbsp;&nbsp;<b>{branch&&branch.district}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Area: &nbsp;&nbsp;<b>K40</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Area: &nbsp;&nbsp;<b>{branch&&branch.Area}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>Reads: &nbsp;&nbsp;<b>33</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>Manager: &nbsp;&nbsp;<b>{branch&&
+                                                    users[users.findIndex(user => user.userID===branch.manager[0])]&&
+                                                    users[users.findIndex(user => user.userID===branch.manager[0])].firstname + " " +
+                                                    users[users.findIndex(user => user.userID===branch.manager[0])].surname}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
-                                                    <Alert message={<>created: &nbsp;&nbsp;<b>today</b></>} className="w-100 my-1 deep-orange-text"
+                                                    <Alert message={<>created: &nbsp;&nbsp;<b>{branch&&moment(branch.dateCreated, "YYYY-MM-DDTh:mm:ss").format("DD MMM YYYY")}</b></>} className="w-100 my-1 deep-orange-text"
                                                            style={{borderColor: "#f69a00", backgroundColor:"#fce0b2", color:"#f69a00"}} />
 
                                                 </div>
@@ -139,6 +179,64 @@ const BranchDetails = () => {
                                                 )}
                                             />
 
+                                        </Card>
+
+                                    </MDBRow>
+
+                                </Card>
+                            </MDBCol>
+                        </MDBRow>
+                        <MDBRow>
+                            <MDBCol>
+                                <Card className="mt-2 w-100">
+                                    <MDBRow>
+                                        <MDBCol md={10}>
+                                            <div className="d-block ml-1">
+                                                <h3 className="font-weight-bold">
+                                                    <Text family='Nunito'>
+                                                        Products
+                                                    </Text>
+                                                </h3>
+                                            </div>
+                                        </MDBCol>
+                                        <MDBCol>
+                                            <Button type="primary" className="mx-1" onClick={() => {}}>
+                                                <AddIcon color="info"/>
+                                            </Button>
+                                        </MDBCol>
+
+                                    </MDBRow>
+                                    <hr/>
+                                    <MDBRow>
+                                        <Card bordered={false} className="w-100 bg-white">
+                                            <List
+                                                grid={{gutter:16, column: 4 }}
+                                                //loading={memberLoading}
+                                                dataSource={prodArray}
+                                                renderItem={item => (
+                                                    <List.Item>
+                                                        <Card
+                                                            className="w-100"
+                                                            actions={[<TrashIcon color="danger" className="mx-4" onClick={() => {
+                                                                // eslint-disable-next-line no-restricted-globals
+                                                                if (confirm("Are you sure you want to remove user from this project?")) {
+                                                                    //deleteMember(item.id)
+                                                                }
+                                                            }}/>]}>
+                                                            <Meta
+                                                                avatar={<Avatar className="rounded float-left d-inline"
+                                                                                style={{ backgroundColor: "#f06000", verticalAlign: 'middle' }} size={56} gap={1}>
+                                                                    {products[products.findIndex(prod => prod.productID===item.productID)]&&
+                                                                    products[products.findIndex(prod => prod.productID===item.productID)].name[0]}
+                                                                </Avatar>}
+                                                                title={"" + products[products.findIndex(prod => prod.productID===item.productID)]&&
+                                                                products[products.findIndex(prod => prod.productID===item.productID)].name}
+                                                                description={"Stock: " + item.stockCount}
+                                                            />
+                                                        </Card>
+                                                    </List.Item>
+                                                )}
+                                            />
                                         </Card>
 
                                     </MDBRow>

@@ -66,10 +66,7 @@ const Branches = () => {
     const [branchArray, setBranchArray] = useState([]);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
-    const [editBranch, setEditBranch] = useState(null)
     const callback = (data) => {
         setCheckedData(data);
     }
@@ -143,18 +140,7 @@ const Branches = () => {
 
                                 </Dialog>
 
-                                <Dialog
-                                    isShown={showEditModal}
-                                    title="Edit Branch"
-                                    onCloseComplete={() => {setShowEditModal(false)}}
-                                    shouldCloseOnOverlayClick={false}
-                                    hasFooter={false}>
 
-                                    <MDBCol md={12}>
-                                        <EditBranchModal modal={setShowEditModal} editBranch={editBranch}/>
-                                    </MDBCol>
-
-                                </Dialog>
 
                                 <Card className="w-100">
 
