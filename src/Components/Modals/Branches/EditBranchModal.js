@@ -8,6 +8,8 @@ import {useListVals} from "react-firebase-hooks/database";
 
 const prodRef = Firebase.database().ref('System/Products');
 const userRef = Firebase.database().ref('System/Users');
+const moment = require('moment');
+
 const EditBranchModal = (props) => {
 
     const districts = ["Balaka", "Blantyre", "Chikwawa", "Chiradzulu", "Chitipa","Dedza", "Dowa", "Karonga","Kasungu", "Lilongwe", "Mchinji", "Nkhotakota", "Ntcheu", "Ntchisi", "Salima",
@@ -38,14 +40,31 @@ const EditBranchModal = (props) => {
 
 
     useEffect(() => {
-        console.log(props.editBranch);
         setSelectedBranch(props.editBranch);
     }, [props])
 
 
     const editBranch = (values) => {
         //setShowLoading(true);
+        var timeStamp = moment().format("YYYY-MM-DDTh:mm:ss");
+        var overObj = {}
+        selectedProducts.map((item) => {
+            var index = Object.values(selectedBranch.products).findIndex(x => x.productID === item)
 
+            if(index === -1){
+                var obj = {
+                    "stockCount" : 0,
+                    "updatedAt" : timeStamp,
+                    "productID" : item
+                }
+            } else {
+                var obj = Object.values(selectedBranch.products)[index];
+            }
+
+            overObj[item] = obj;
+        })
+
+        console.log(overObj);
         var object = {
             "name" : values.name,
             "district" : values.district,
@@ -55,7 +74,7 @@ const EditBranchModal = (props) => {
                 "latitude" : values.latitude
             },
             "manager" : values.manager,
-            //"products" : overObj
+            "products" : overObj
         };
 
 
@@ -63,7 +82,7 @@ const EditBranchModal = (props) => {
         output.then((result) => {
             console.log(result);
             if(result === "success"){
-                setMessage("Branches edited successfully");
+                setMessage("Branch edited successfully");
                 setShowLoading(false);
                 setShowAlert(true);
                 setColor("success");
@@ -80,6 +99,8 @@ const EditBranchModal = (props) => {
             setShowAlert(true);
             setShowLoading(false);
         })
+
+
 
     }
 

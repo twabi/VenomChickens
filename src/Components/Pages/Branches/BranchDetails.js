@@ -11,6 +11,7 @@ import {useListVals, useObject} from "react-firebase-hooks/database";
 import {LineChart} from "../../Charts/LineChart";
 import {PieChart} from "../../Charts/PieChart";
 import EditBranchModal from "../../Modals/Branches/EditBranchModal";
+import AddProduct from "../../Modals/Branches/AddProduct";
 
 
 const {Content} = Layout;
@@ -32,6 +33,7 @@ const BranchDetails = () => {
     const [prodArray, setProdArray] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editBranch, setEditBranch] = useState(null)
+    const [showAddModal, setShowAddModal] = useState(false);
     const callback = (data) => {
         setCheckedData(data);
     }
@@ -70,6 +72,14 @@ const BranchDetails = () => {
                                     <EditBranchModal modal={setShowEditModal} editBranch={editBranch}/>
                                 </MDBCol>
 
+                            </Dialog>
+                            <Dialog
+                                isShown={showAddModal}
+                                title="Add Products"
+                                onCloseComplete={() => {setShowAddModal(false)}}
+                                shouldCloseOnOverlayClick={false}
+                                hasFooter={false}>
+                                <AddProduct editBranch={editBranch} modal={setShowAddModal}/>
                             </Dialog>
                             <MDBCol md={7}>
                                 <Card className="mt-2 w-100">
@@ -200,7 +210,7 @@ const BranchDetails = () => {
                                             </div>
                                         </MDBCol>
                                         <MDBCol>
-                                            <Button type="primary" className="mx-1" onClick={() => {}}>
+                                            <Button type="primary" className="mx-1" onClick={() => {setEditBranch(branch); setShowAddModal(true)}}>
                                                 <AddIcon color="info"/>
                                             </Button>
                                         </MDBCol>
