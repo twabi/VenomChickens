@@ -161,8 +161,7 @@ const CreateBranchModal = (props) => {
                 </Form.Item>
 
                 <Form.Item label="Branch Manager"
-                           name="manager"
-                           rules={[{ required: true, message: 'Please select manager!' }]}>
+                           name="manager">
                     <Select placeholder="Select Products that the Outlet has"
                             showSearch
                             mode="multiple"

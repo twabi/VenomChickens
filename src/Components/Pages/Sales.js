@@ -20,6 +20,10 @@ import {generatePath} from "react-router";
 
 
 const dbRef = Firebase.database().ref('System/Sales');
+const branchRef = Firebase.database().ref('System/Branches');
+const userRef = Firebase.database().ref('System/Users');
+const prodRef = Firebase.database().ref('System/Products');
+const dealerRef = Firebase.database().ref('System/Dealers');
 const { Content } = Layout;
 const Sales = () => {
 
@@ -30,22 +34,30 @@ const Sales = () => {
             key: 'key',
         },
         {
-            title: 'Fullname',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Product',
+            dataIndex: 'product',
+            key: 'product',
         },{
-            title: 'Books',
-            dataIndex: 'books',
-            key: 'books',
+            title: 'Dealer',
+            dataIndex: 'dealer',
+            key: 'dealer',
         },{
-            title: 'Created',
-            dataIndex: 'created',
-            key: 'created',
+            title: 'Branch',
+            dataIndex: 'branch',
+            key: 'branch',
+        },{
+            title: 'SalesRep',
+            dataIndex: 'salesrep',
+            key: 'salesrep',
+        },{
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
         },{
             title: 'Action',
             dataIndex: 'action',
@@ -55,14 +67,16 @@ const Sales = () => {
 
     const history = useHistory();
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-    const [employees, loading, error] = useListVals(dbRef);
+    const [sales, loading, error] = useListVals(dbRef);
+    const [users] = useListVals(userRef);
+    const [dealers] = useListVals(dealerRef);
+    const [products] = useListVals(prodRef);
+    const [branches] = useListVals(branchRef);
     const [showModal, setShowModal] = useState(false);
     const [dataArray, setDataArray] = useState([]);
-    const [userArray, setUserArray] = useState([]);
+    const [saleArray, setSalesArray] = useState([])
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [editUser, setEditUser] = useState(null);
     const [viewModal, setViewModal] = useState(false);
     const [checkedData, setCheckedData] = useState(true);
     const callback = (data) => {
@@ -74,7 +88,12 @@ const Sales = () => {
 
         setDataArray([{
             key:1, name: "Jack Bauer", email: "Eggs", books: 7, created: new Date(2021,11,12),
-            action : <MDBIcon icon="arrow-circle-right" className="indigo-text" onClick={() => {}} size="2x" />
+            action : <Button appearance="default" onClick={() => {
+                //setSelectedTask(task);
+                //setViewModal(true);
+            }}>
+                <EyeOpenIcon color="blue700"/>
+            </Button>
         }]);
     }, []);
 
@@ -83,7 +102,7 @@ const Sales = () => {
     };
 
     const handleSearch = searchText => {
-        const filteredEvents = userArray.filter(({ name, email, dpt, userRole }) => {
+        const filteredEvents = saleArray.filter(({ name, email, dpt, userRole }) => {
             name = name.toLowerCase();
             email = email.toLowerCase();
             dpt = dpt.toLowerCase();

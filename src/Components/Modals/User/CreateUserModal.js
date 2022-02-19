@@ -7,14 +7,18 @@ import {MDBAlert} from "mdbreact";
 
 import{ init } from 'emailjs-com';
 import SecondaryFirebase from "../../SecondaryFirebase";
+import Firebase from "../../Firebase";
+import {useListVals} from "react-firebase-hooks/database";
 init("user_2JD2DZg8xAHDW7e9kdorr");
 
 const regEx = /((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))/g;
 const moment = require("moment");
+const branchRef = Firebase.database().ref('System/Branches');
 const CreateUserModal = (props) => {
 
     const [DOB, setDOB] = useState(null);
     const [gender, setGender] = useState(null);
+    const [branches] = useListVals(branchRef);
     const [showAlert, setShowAlert] = useState(false);
     const [color, setColor] = useState("info");
     const [message, setMessage] = useState("");
@@ -47,6 +51,7 @@ const CreateUserModal = (props) => {
             "gender" : values.gender,
             "dob" : DOB,
             "dateCreated" : timeStamp,
+            "branch" : values.branch,
             "role" : values.role,
         };
         var templateParams = {
@@ -165,6 +170,23 @@ const CreateUserModal = (props) => {
                                 onChange={changeGender}>
                             {["Male", "Female", "Rather Not Say"].map((item, index) => (
                                 <Select.Option key={index}  value={item}>{item}</Select.Option>
+                            ))}
+
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="branch" label="Branch">
+                        <Select placeholder="Select user's Branch"
+                                showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                filterSort={(optionA, optionB) =>
+                                    optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                }
+                                onChange={() => {}}>
+                            {branches.map((item, index) => (
+                                <Select.Option key={index}  value={item.branchID}>{item.name}</Select.Option>
                             ))}
 
                         </Select>

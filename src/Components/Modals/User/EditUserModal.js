@@ -5,12 +5,15 @@ import {MDBAlert} from "mdbreact";
 
 import{ init } from 'emailjs-com';
 import FireFetch from "../../FireFetch";
+import Firebase from "../../Firebase";
+import {useListVals} from "react-firebase-hooks/database";
 init("user_2JD2DZg8xAHDW7e9kdorr");
 
-
+const branchRef = Firebase.database().ref('System/Branches');
 const moment = require("moment");
 const EditUserModal = (props) => {
 
+    const [branches] = useListVals(branchRef);
     const [user, setUser] = useState(props.editUser)
     const [DOB, setDOB] = useState(null);
     const [gender, setGender] = useState(null);
@@ -45,6 +48,7 @@ const EditUserModal = (props) => {
             "email" : values.email,
             "phone" : values.phone,
             "gender" : values.gender,
+            "branch" : values.branch,
             "dob" : DOB,
             "role" : values.role,
         };
@@ -86,7 +90,8 @@ const EditUserModal = (props) => {
                     phone: user.phone,
                     DOB: !user.dob ? undefined : moment(user.dob, "YYYY-MM-DD"),
                     gender: user.gender,
-                    role: user.role
+                    role: user.role,
+                    branch: user.branch? user.branch : null
                 }}
             >
 
@@ -125,6 +130,23 @@ const EditUserModal = (props) => {
                             onChange={changeGender}>
                         {["Male", "Female", "Rather Not Say"].map((item, index) => (
                             <Select.Option key={index}  value={item}>{item}</Select.Option>
+                        ))}
+
+                    </Select>
+                </Form.Item>
+                <Form.Item name="branch" label="Branch">
+                    <Select placeholder="Select user's Branch"
+                            showSearch
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            filterSort={(optionA, optionB) =>
+                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                            }
+                            onChange={() => {}}>
+                        {branches.map((item, index) => (
+                            <Select.Option key={index}  value={item.branchID}>{item.name}</Select.Option>
                         ))}
 
                     </Select>
