@@ -81,7 +81,7 @@ const NavBar = (props) => {
                     <MDBDropdown className="mr-5">
                         <MDBDropdownToggle nav caret>
                             <div  className="d-inline" >
-                                <p className="d-inline mx-1 font-weight-bold">{"userName"}</p>
+                                <p className="d-inline mx-1 font-weight-bold">{userName}</p>
                             </div>
                         </MDBDropdownToggle>
                         <MDBDropdownMenu className="dropdown-default">

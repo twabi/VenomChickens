@@ -8,7 +8,7 @@ import Button from "@material-tailwind/react/Button";
 import { useHistory } from 'react-router-dom';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import Firebase from "../Firebase";
-import { Input } from 'antd';
+import {Form, Input} from 'antd';
 import {LockOutlined, MailOutlined} from '@ant-design/icons';
 
 const dbRef = Firebase.database().ref("System/Users");
@@ -52,7 +52,7 @@ const Login = () => {
                        setColor("danger");
                        setErrorMessage("A salesrep cannot access this platform. Contact your Supervisor for more.");
 
-                   } else if(role === "Admin") {
+                   } else if(role === "Team-Principal") {
                        setShowLoading(false);
                        gotoHome();
                    }
@@ -87,9 +87,10 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-        
+
         if((email == null || password == null) || (email === "" || password === "")) {
             setErrorMessage("Fields cannot be left empty!");
+            setColor("danger");
             setShowAlert(true);
         } else {
             setShowLoading(true);
@@ -111,7 +112,7 @@ const Login = () => {
                                         <img src={logo} style={{width:"10rem", height:"10rem"}} className="rounded mx-auto d-block" alt="aligment" />
                                     </MDBCol>
                                 </MDBRow>
-                                <form className="mt-4">
+                                <Form className="mt-4">
                                     <div className="grey-text mt-4">
 
                                         <Input size="large"
@@ -143,13 +144,13 @@ const Login = () => {
 
 
                                     <div className="text-center py-4 mt-3">
-                                        <Button className="w-100 bg-orange-500"  onClick={gotoHome} type="primary" shape="round" size="large">
+                                        <Button className="w-100 bg-orange-500"  onClick={handleLogin} type="primary" shape="round" size="large">
                                             LOGIN {showLoading ? <div className="spinner-border mx-2 text-white spinner-border-sm" role="status">
                                             <span className="sr-only">Loading...</span>
                                         </div> : null}
                                         </Button>
                                     </div>
-                                </form>
+                                </Form>
                             </MDBCardBody>
                             <MDBFooter>
                                 <div className="text-center text-black-50 d-flex justify-content-center mb-3">
